@@ -1,0 +1,11 @@
+feedback_id,date,user_type,category,rating,comment_text,theme,sentiment,severity,needs_review
+F0041,2026-03-25,Member,Availability,4,no bikes available at my station in the morning,No bikes (morning),negative,low,True
+F0067,2026-03-25,Casual,App,4,app GPS shows wrong station,App GPS wrong station,negative,low,True
+F0068,2026-03-25,Member,Availability,5,no bikes available at my station in the morning,No bikes (morning),negative,low,True
+F0142,2026-03-23,Member,App,5,app GPS shows wrong station,App GPS wrong station,negative,low,True
+F0148,2026-03-25,Casual,Bike condition,4,seat was wobbly,Wobbly seat,negative,low,True
+F0198,2026-03-23,Member,App,4,app GPS shows wrong station,App GPS wrong station,negative,low,True
+F0206,2026-03-26,Member,Availability,5,hard to find a bike at peak hour,No bikes (peak hour),negative,low,True
+F0211,2026-03-29,Casual,Availability,5,hard to find a bike at peak hour,No bikes (peak hour),negative,low,True
+F0288,2026-03-26,Casual,App,4,app GPS shows wrong station,App GPS wrong station,negative,low,True
+F0300,2026-03-23,Casual,Billing,4,charged twice for one ride,Double charge,negative,low,True

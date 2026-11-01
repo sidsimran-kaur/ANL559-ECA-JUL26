@@ -178,16 +178,12 @@ def trends(t_all, f_all, upto):
 
 
 def main(week_start=None):
+    global OUT
+    if week_start:                                   # each reporting week gets its own folder
+        OUT = ROOT / "out" / f"week_{week_start}"; OUT.mkdir(parents=True, exist_ok=True)
     t = pd.read_csv(RAW / "CityCycle_trips.csv", parse_dates=["start_time", "end_time"])
     s = pd.read_csv(RAW / "CityCycle_stations.csv")
     f = pd.read_csv(RAW / "CityCycle_feedback.csv", parse_dates=["date"])
-    control = {"trips_rows": len(t), "stations_rows": len(s), "feedback_rows": len(f),
-               "total_ride_minutes": int(t.duration_min.sum()), "total_km": round(float(t.distance_km.sum()), 2)}
-
-    log = validate(t, s, f)
-    if (log.level == "FAIL").any():
-        print("DATA CONTRACT FAILED - no report produced. See out/data_quality_log.csv"); sys.exit(1)
-
     t_all, f_all = t, f
     cap = s.set_index("station").capacity
     if week_start:
@@ -197,6 +193,12 @@ def main(week_start=None):
     else:
         we = t_all.start_time.max() + pd.Timedelta(seconds=1)
         history = t_all[t_all.start_time < HOLDOUT_FROM]             # learn on Jan-Feb, test on March
+    control = {"trips_rows": len(t), "stations_rows": len(s), "feedback_rows": len(f),
+               "total_ride_minutes": int(t.duration_min.sum()), "total_km": round(float(t.distance_km.sum()), 2)}
+
+    log = validate(t, s, f)                                          # the contract runs on the window
+    if (log.level == "FAIL").any():
+        print("DATA CONTRACT FAILED - no report produced. See data_quality_log.csv"); sys.exit(1)
     days = t.start_time.dt.normalize().nunique()
 
     flows = peak_flows(t, cap)
@@ -244,7 +246,9 @@ def main(week_start=None):
                   "weekly_trips_complete_weeks": {"min": int((weekly.Member + weekly.Casual).min()),
                                                   "max": int((weekly.Member + weekly.Casual).max()),
                                                   "latest": int((weekly.Member + weekly.Casual).iloc[-1]),
-                                                  "prior_4wk_avg": round(float((weekly.Member + weekly.Casual).iloc[-5:-1].mean()), 1)},
+                                                  "prior_4wk_avg": round(float((weekly.Member + weekly.Casual).iloc[-5:-1].mean()), 1),
+                  "latest_vs_prior_4wk_pct": round(float((weekly.Member + weekly.Casual).iloc[-1]
+                                                         / (weekly.Member + weekly.Casual).iloc[-5:-1].mean() * 100 - 100), 1)},
                   "station_change_pct_first_to_last_month": {"fastest_growing": station_chg.tail(3).to_dict(),
                                                              "falling": station_chg.head(2).to_dict()},
                   "negative_comments_by_month": complaints_m.to_dict("index")},

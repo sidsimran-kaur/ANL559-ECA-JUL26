@@ -11,7 +11,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-facts = json.loads((ROOT / "out" / "facts.json").read_text())
+report_path = Path(sys.argv[1]).resolve()
+# use the facts.json next to the report if there is one (weekly runs), else the quarter's
+facts_path = report_path.parent / "facts.json" if (report_path.parent / "facts.json").exists() else ROOT / "out" / "facts.json"
+facts = json.loads(facts_path.read_text())
+print(f"Checking {report_path.name} against {facts_path.relative_to(ROOT)}")
 
 # Numbers that come from approved definitions in work_order.md, not from the data
 DEFINITION_NUMBERS = {7, 9, 17, 19, 30, 90, 1, 2, 3, 4, 5}
@@ -39,9 +43,11 @@ def traced(num):
     return any(abs(num - a) < 1e-9 for a in allowed)
 
 
-text = Path(sys.argv[1]).read_text(encoding="utf-8")
-# ignore dates (2026-03-23) and clock times (07:00) - they are labels, not findings
+text = report_path.read_text(encoding="utf-8")
+# ignore dates (2026-03-23, 23–29 March 2026) and clock times (07:00) - labels, not findings
+MONTHS = "January|February|March|April|May|June|July|August|September|October|November|December"
 clean = re.sub(r"\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}", " ", text)
+clean = re.sub(rf"\d{{1,2}}(?:[–-]\d{{1,2}})?\s+(?:{MONTHS})\s+\d{{4}}", " ", clean)   # written dates, e.g. 23–29 March 2026
 nums = [n for n in re.findall(r"(?<![\w.])-?\d[\d,]*\.?\d*", clean)]
 bad = []
 for raw in nums:

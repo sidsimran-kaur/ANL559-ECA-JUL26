@@ -1,0 +1,9 @@
+Figure                               Independent  facts.json  Result
+Trips in week                                486         486  MATCH
+Trips per day                               69.4        69.4  MATCH
+Changi Business Park starts                   42          42  MATCH
+Tanjong Pagar morning net loss               2.6         2.6  MATCH
+Raffles Place morning net loss               2.2         2.2  MATCH
+Comments in week                              21          21  MATCH
+Negative comments (keyword rule)              14          14  MATCH
+Average rating                               4.0         4.0  MATCH

@@ -143,7 +143,8 @@
       "min": 468,
       "max": 545,
       "latest": 486,
-      "prior_4wk_avg": 529.0
+      "prior_4wk_avg": 529.0,
+      "latest_vs_prior_4wk_pct": -8.1
     },
     "station_change_pct_first_to_last_month": {
       "fastest_growing": {

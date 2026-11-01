@@ -1,0 +1,223 @@
+{
+  "window": {
+    "from": "2026-03-23",
+    "to": "2026-03-29",
+    "days": 7
+  },
+  "control_totals": {
+    "trips_rows": 486,
+    "stations_rows": 20,
+    "feedback_rows": 21,
+    "total_ride_minutes": 8209,
+    "total_km": 1395.6
+  },
+  "data_quality_warnings": [
+    {
+      "check": "round trips (start = end station)",
+      "count": 26
+    },
+    {
+      "check": "distance consistent per station pair",
+      "count": 108
+    },
+    {
+      "check": "station region matches URA planning region",
+      "count": 14
+    },
+    {
+      "check": "feedback has no station field",
+      "count": 21
+    }
+  ],
+  "trips": {
+    "total": 486,
+    "per_day": 69.4,
+    "member_share_pct": 62.8,
+    "avg_minutes_member": 14.3,
+    "avg_minutes_casual": 21.2,
+    "member_peak_hours": [
+      18,
+      8
+    ],
+    "casual_peak_hour": 14
+  },
+  "busiest_start_stations": {
+    "Changi Business Park": 42,
+    "Tanjong Pagar": 39,
+    "Marina Bay": 39,
+    "Raffles Place": 35,
+    "Woodlands": 33
+  },
+  "morning_peak_draining": {
+    "Tanjong Pagar": 2.6,
+    "Changi Business Park": 2.4,
+    "Raffles Place": 2.2,
+    "Marina Bay": 2.2,
+    "one-north": 1.6,
+    "Clarke Quay": 0.2
+  },
+  "evening_peak_net_leaving_range": [
+    -1.0,
+    0.8
+  ],
+  "opening_plan_top": {
+    "Raffles Place": {
+      "capacity": 15,
+      "open_min": 7.0,
+      "open_max": 12.0,
+      "open_target": 10.0
+    },
+    "Marina Bay": {
+      "capacity": 20,
+      "open_min": 7.0,
+      "open_max": 17.0,
+      "open_target": 12.0
+    },
+    "Clarke Quay": {
+      "capacity": 30,
+      "open_min": 7.0,
+      "open_max": 27.0,
+      "open_target": 17.0
+    },
+    "Changi Business Park": {
+      "capacity": 30,
+      "open_min": 7.0,
+      "open_max": 28.0,
+      "open_target": 18.0
+    },
+    "Tanjong Pagar": {
+      "capacity": 15,
+      "open_min": 6.0,
+      "open_max": 13.0,
+      "open_target": 10.0
+    },
+    "one-north": {
+      "capacity": 20,
+      "open_min": 6.0,
+      "open_max": 17.0,
+      "open_target": 12.0
+    }
+  },
+  "opening_plan_all_feasible": true,
+  "opening_rule_test": {
+    "tested_on": "reporting week",
+    "full": {
+      "station_days": 140,
+      "no_bike": 0,
+      "no_free_dock": 96
+    },
+    "half": {
+      "station_days": 140,
+      "no_bike": 0,
+      "no_free_dock": 0
+    },
+    "target": {
+      "station_days": 140,
+      "no_bike": 0,
+      "no_free_dock": 0
+    }
+  },
+  "trend": {
+    "monthly": {
+      "2026-01": {
+        "trips_per_day": 70.9,
+        "member_per_day": 43.1,
+        "casual_per_day": 27.7
+      },
+      "2026-02": {
+        "trips_per_day": 71.3,
+        "member_per_day": 42.7,
+        "casual_per_day": 28.6
+      },
+      "2026-03": {
+        "trips_per_day": 74.3,
+        "member_per_day": 43.6,
+        "casual_per_day": 30.8
+      }
+    },
+    "weekly_trips_complete_weeks": {
+      "min": 468,
+      "max": 545,
+      "latest": 486,
+      "prior_4wk_avg": 529.0,
+      "latest_vs_prior_4wk_pct": -8.1
+    },
+    "station_change_pct_first_to_last_month": {
+      "fastest_growing": {
+        "Orchard": 23.0,
+        "Bishan": 30.0,
+        "Woodlands": 33.0
+      },
+      "falling": {
+        "Paya Lebar": -20.0,
+        "Tanjong Pagar": -7.0
+      }
+    },
+    "negative_comments_by_month": {
+      "2026-01": {
+        "App": 26,
+        "Availability": 16,
+        "Bike condition": 23,
+        "Billing": 16
+      },
+      "2026-02": {
+        "App": 23,
+        "Availability": 14,
+        "Bike condition": 15,
+        "Billing": 10
+      },
+      "2026-03": {
+        "App": 25,
+        "Availability": 23,
+        "Bike condition": 15,
+        "Billing": 8
+      }
+    }
+  },
+  "feedback": {
+    "total": 21,
+    "negative": 14,
+    "positive": 7,
+    "avg_rating": 4.0,
+    "top_issues": [
+      {
+        "theme": "App GPS wrong station",
+        "n": 4,
+        "avg_rating": 4.25,
+        "high_severity": 0
+      },
+      {
+        "theme": "No bikes (morning)",
+        "n": 3,
+        "avg_rating": 3.67,
+        "high_severity": 1
+      },
+      {
+        "theme": "No bikes (peak hour)",
+        "n": 2,
+        "avg_rating": 5.0,
+        "high_severity": 0
+      },
+      {
+        "theme": "Double charge",
+        "n": 2,
+        "avg_rating": 3.5,
+        "high_severity": 0
+      },
+      {
+        "theme": "Wobbly seat",
+        "n": 2,
+        "avg_rating": 3.5,
+        "high_severity": 0
+      },
+      {
+        "theme": "App payment failure",
+        "n": 1,
+        "avg_rating": 2.0,
+        "high_severity": 1
+      }
+    ],
+    "safety_mentions": 0,
+    "rating_text_disagree": 10
+  }
+}
