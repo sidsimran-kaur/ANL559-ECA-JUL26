@@ -27,6 +27,8 @@ OUT.mkdir(exist_ok=True)
 # ---- approved definitions (work_order.md); changing one needs a new sign-off ----
 PEAKS = {"Morning peak (07:00-09:00)": (7 * 60, 9 * 60), "Evening peak (17:30-19:30)": (17 * 60 + 30, 19 * 60 + 30)}
 OPENING_STOCK_PCTL = 0.90
+HOLDOUT_FROM = "2026-03-01"          # quarter mode: opening targets learned before this date, tested after
+HOLIDAYS = {"2026-02-16": "Chinese New Year"}  # week starts to annotate on the trend chart
 SAFETY_THEMES = {"Brakes loose"}
 
 # Feedback taxonomy v1: drafted by the LLM, reviewed and approved by the analyst.
@@ -116,20 +118,63 @@ def peak_flows(t, cap):
     return out
 
 
-def opening_stock(t, cap):
-    """Largest running loss of bikes per station per day -> the stock it needed at opening."""
+def daily_swings(t):
+    """For each station-day: the most bikes it lost before getting any back (loss) and the most it gained (gain)."""
     ev = pd.concat([pd.DataFrame({"station": t.start_station, "ts": t.start_time, "d": -1}),
                     pd.DataFrame({"station": t.end_station, "ts": t.end_time, "d": 1})]).sort_values(["ts", "d"])
     ev["day"] = ev.ts.dt.normalize()
-    ev["run"] = ev.groupby(["station", "day"]).d.cumsum()
-    need = (-ev.groupby(["station", "day"]).run.min()).clip(lower=0)
-    g = need.groupby("station")
-    df = pd.DataFrame({"avg_day": g.mean().round(1), "p90_day": g.quantile(OPENING_STOCK_PCTL).round(0),
-                       "worst_day": g.max(), "capacity": cap})
-    half = (cap / 2).round()
-    df["days_empty_if_half_full"] = need.groupby("station").apply(lambda x: int((x > half[x.name]).sum()))
-    df["p90_pct_capacity"] = (df.p90_day / df.capacity * 100).round(0)
-    return df.sort_values("p90_pct_capacity", ascending=False)
+    run = ev.assign(run=ev.groupby(["station", "day"]).d.cumsum()).groupby(["station", "day"]).run
+    return pd.DataFrame({"loss": (-run.min()).clip(lower=0), "gain": run.max().clip(lower=0)})
+
+
+def opening_plan(history, cap):
+    """Safe opening range per station: enough bikes for a 9-in-10 day's loss AND enough free docks
+    for a 9-in-10 day's gain. Target = middle of the range. Learned from `history` only."""
+    sw = daily_swings(history).groupby("station")
+    df = pd.DataFrame({"capacity": cap,
+                       "bikes_needed_p90": sw.loss.quantile(OPENING_STOCK_PCTL).round(),
+                       "free_docks_needed_p90": sw.gain.quantile(OPENING_STOCK_PCTL).round(),
+                       "worst_day_loss": sw.loss.max(), "worst_day_gain": sw.gain.max()})
+    df["open_min"] = df.bikes_needed_p90
+    df["open_max"] = df.capacity - df.free_docks_needed_p90
+    df["open_target"] = ((df.open_min + df.open_max) / 2).round()
+    df["feasible"] = df.open_min <= df.open_max
+    return df.sort_values("open_min", ascending=False)
+
+
+def test_policies(t, cap, targets):
+    """Station-days on which a rider would find no bike / no free dock, under three opening rules."""
+    sw = daily_swings(t).reset_index()
+    c = sw.station.map(cap)
+    out = {}
+    for name, start in [("full", c), ("half", (c / 2).round()), ("target", sw.station.map(targets))]:
+        out[name] = {"station_days": len(sw), "no_bike": int((sw.loss > start).sum()),
+                     "no_free_dock": int((sw.gain > c - start).sum())}
+    return out
+
+
+def trends(t_all, f_all, upto):
+    """Usage and complaint trends over all data up to the end of the reporting window."""
+    t = t_all[t_all.start_time < upto]; f = f_all[f_all.date < upto]
+    wk = t.groupby(t.start_time.dt.to_period("W-SUN"))
+    weekly = pd.DataFrame({"Member": wk.apply(lambda g: (g.user_type == "Member").sum()),
+                           "Casual": wk.apply(lambda g: (g.user_type == "Casual").sum()),
+                           "days": wk.start_time.apply(lambda x: x.dt.normalize().nunique())})
+    weekly = weekly[weekly.days == 7].drop(columns="days")          # only complete weeks are compared
+    weekly.index = weekly.index.map(lambda p: p.start_time.date())
+    m = t.groupby(t.start_time.dt.to_period("M"))
+    days = m.start_time.apply(lambda x: x.dt.normalize().nunique())
+    monthly = pd.DataFrame({"trips_per_day": m.size() / days,
+                            "member_per_day": m.apply(lambda g: (g.user_type == "Member").sum()) / days,
+                            "casual_per_day": m.apply(lambda g: (g.user_type == "Casual").sum()) / days}).round(1)
+    monthly.index = monthly.index.astype(str)
+    st = t.groupby([t.start_time.dt.to_period("M").astype(str), "start_station"]).size().unstack(0).div(days.values, axis=1)
+    first, last = st.columns[0], st.columns[-1]
+    chg = ((st[last] / st[first] - 1) * 100).round(0).sort_values()
+    neg = f.assign(theme=f.comment_text.map(lambda c: THEMES[c][0]), sent=f.comment_text.map(lambda c: THEMES[c][1]))
+    neg = neg[neg.sent == "negative"]
+    comp = pd.crosstab(neg.date.dt.to_period("M").astype(str), neg.category)
+    return weekly, monthly, chg, comp
 
 
 def main(week_start=None):
@@ -143,16 +188,26 @@ def main(week_start=None):
     if (log.level == "FAIL").any():
         print("DATA CONTRACT FAILED - no report produced. See out/data_quality_log.csv"); sys.exit(1)
 
+    t_all, f_all = t, f
+    cap = s.set_index("station").capacity
     if week_start:
         ws = pd.Timestamp(week_start); we = ws + pd.Timedelta(days=7)
         t = t[(t.start_time >= ws) & (t.start_time < we)]; f = f[(f.date >= ws) & (f.date < we)]
-    cap = s.set_index("station").capacity
+        history = t_all[t_all.start_time < ws]                       # targets learned before the week
+    else:
+        we = t_all.start_time.max() + pd.Timedelta(seconds=1)
+        history = t_all[t_all.start_time < HOLDOUT_FROM]             # learn on Jan-Feb, test on March
     days = t.start_time.dt.normalize().nunique()
 
     flows = peak_flows(t, cap)
     pd.concat(flows, axis=1).to_csv(OUT / "station_peak_flows.csv")
-    stock = opening_stock(t, cap); stock.to_csv(OUT / "opening_stock_needed.csv")
+    plan = opening_plan(history, cap); plan.to_csv(OUT / "opening_plan.csv")
+    test_window = t if week_start else t_all[t_all.start_time >= HOLDOUT_FROM]
+    policy = test_policies(test_window, cap, plan.open_target)
     hourly = pd.crosstab(t.start_time.dt.hour, t.user_type)
+    weekly, monthly, station_chg, complaints_m = trends(t_all, f_all, we)
+    weekly.to_csv(OUT / "trend_weekly_trips.csv"); monthly.to_csv(OUT / "trend_monthly.csv")
+    complaints_m.to_csv(OUT / "trend_complaints_by_month.csv")
 
     # step 3 - classify feedback: sentiment from text, severity from stars, disagreement -> review
     f = f.assign(theme=f.comment_text.map(lambda c: THEMES[c][0]),
@@ -181,8 +236,18 @@ def main(week_start=None):
         "busiest_start_stations": t.start_station.value_counts().head(5).to_dict(),
         "morning_peak_draining": am[am.net_leaving > 0].net_leaving.sort_values(ascending=False).to_dict(),
         "evening_peak_net_leaving_range": [float(pm.net_leaving.min()), float(pm.net_leaving.max())],
-        "opening_stock_needed_top": stock.head(6)[["p90_day", "worst_day", "capacity", "p90_pct_capacity",
-                                                   "days_empty_if_half_full"]].to_dict("index"),
+        "opening_plan_top": plan.head(6)[["capacity", "open_min", "open_max", "open_target"]].to_dict("index"),
+        "opening_plan_all_feasible": bool(plan.feasible.all()),
+        "opening_rule_test": {"tested_on": ("reporting week" if week_start else f"{HOLDOUT_FROM} to {t_all.start_time.max().date()} (unseen)"),
+                              **policy},
+        "trend": {"monthly": monthly.to_dict("index"),
+                  "weekly_trips_complete_weeks": {"min": int((weekly.Member + weekly.Casual).min()),
+                                                  "max": int((weekly.Member + weekly.Casual).max()),
+                                                  "latest": int((weekly.Member + weekly.Casual).iloc[-1]),
+                                                  "prior_4wk_avg": round(float((weekly.Member + weekly.Casual).iloc[-5:-1].mean()), 1)},
+                  "station_change_pct_first_to_last_month": {"fastest_growing": station_chg.tail(3).to_dict(),
+                                                             "falling": station_chg.head(2).to_dict()},
+                  "negative_comments_by_month": complaints_m.to_dict("index")},
         "feedback": {"total": len(f), "negative": len(neg), "positive": int((f.sentiment == "positive").sum()),
                      "avg_rating": round(f.rating.mean(), 2),
                      "top_issues": themes.head(6).reset_index()[["theme", "n", "avg_rating", "high_severity"]].to_dict("records"),
@@ -190,7 +255,7 @@ def main(week_start=None):
                      "rating_text_disagree": int(f.needs_review.sum())},
     }
     (OUT / "facts.json").write_text(json.dumps(facts, indent=2, default=str))
-    charts(flows, hourly, themes, stock)
+    charts(flows, hourly, themes, plan, weekly, complaints_m)
     print(json.dumps(facts, indent=2, default=str))
 
 
@@ -207,7 +272,7 @@ def title(fig_or_ax, text, sub=None):
     fig_or_ax.suptitle(text, x=0.02, ha="left", color=INK, fontsize=12, fontweight="bold")
 
 
-def charts(flows, hourly, themes, stock):
+def charts(flows, hourly, themes, plan, weekly, complaints_m):
     plt.rcParams.update({"font.family": "DejaVu Sans", "figure.facecolor": SURF})
 
     # Chart 1 - morning vs evening peak, small multiples on one shared axis
@@ -254,20 +319,51 @@ def charts(flows, hourly, themes, stock):
     ax.set_title("App faults and morning availability lead the complaints", loc="left", color=INK, fontsize=12, fontweight="bold")
     fig.tight_layout(); fig.savefig(OUT / "chart3_complaint_themes.png", dpi=200); plt.close(fig)
 
-    # Chart 4 - availability vs usage: opening stock needed vs docks
-    st = stock.sort_values("p90_pct_capacity")
-    fig, ax = plt.subplots(figsize=(8.5, 6)); style(ax)
+    # Chart 4 - availability vs usage: safe opening range inside dock capacity
+    st = plan.sort_values("open_min")
+    fig, ax = plt.subplots(figsize=(8.5, 6.2)); style(ax)
     ax.barh(st.index, st.capacity, color=GREY, height=0.75, label="Docks (capacity)")
-    ax.barh(st.index, st.p90_day, color=BLUE, height=0.45, label="Bikes needed at opening (9 days in 10)")
-    ax.scatter(st.worst_day, st.index, color=ORANGE, s=28, zorder=3, label="Worst day")
-    for y, (c, n) in enumerate(zip(st.capacity, st.days_empty_if_half_full)):
-        if n:
-            ax.text(c + 0.4, y, f"empty on {n} day{'s' if n > 1 else ''} if opened half-full", va="center", fontsize=7.5, color=INK2)
-    ax.xaxis.grid(True, color=GRID, lw=0.8); ax.set_xlim(0, 40)
-    ax.set_xlabel("Bikes", color=INK2, fontsize=9)
-    ax.legend(frameon=False, fontsize=8, loc="upper left", bbox_to_anchor=(0, 1.07), ncol=3)
-    ax.set_title("Raffles Place and Tanjong Pagar need almost half their docks filled", loc="left", color=INK, fontsize=12, fontweight="bold", pad=26)
+    ax.barh(st.index, st.open_max - st.open_min, left=st.open_min, color=BLUE, height=0.4,
+            label="Safe opening range (enough bikes AND free docks, 9 days in 10)")
+    ax.scatter(st.open_target, st.index, color=ORANGE, s=30, zorder=3, label="Opening target")
+    for y, (lo, hi) in enumerate(zip(st.open_min, st.open_max)):
+        ax.text(hi + 0.4, y, f"{lo:.0f}-{hi:.0f}", va="center", fontsize=7.5, color=INK2)
+    ax.xaxis.grid(True, color=GRID, lw=0.8); ax.set_xlim(0, 32)
+    ax.set_xlabel("Bikes at the station when the day starts", color=INK2, fontsize=9)
+    ax.legend(frameon=False, fontsize=8, loc="upper left", bbox_to_anchor=(0, 1.1), ncol=2)
+    ax.set_title("Opening full would block returns; each station has a safe range", loc="left",
+                 color=INK, fontsize=12, fontweight="bold", pad=34)
     fig.tight_layout(); fig.savefig(OUT / "chart4_restock_need.png", dpi=200); plt.close(fig)
+
+    # Chart 5 - weekly usage trend (complete weeks only)
+    fig, ax = plt.subplots(figsize=(8, 4)); style(ax)
+    x = [str(d)[5:] for d in weekly.index]
+    for col, c in [("Member", BLUE), ("Casual", ORANGE)]:
+        ax.plot(x, weekly[col], color=c, lw=2, marker="o", ms=4, label=col)
+    for i, d in enumerate(weekly.index):
+        if str(d) in HOLIDAYS:
+            ax.annotate(HOLIDAYS[str(d)], (i, weekly.Member.iloc[i]), xytext=(0, -28), textcoords="offset points",
+                        ha="center", fontsize=8, color=INK2, arrowprops=dict(arrowstyle="-", color=INK2, lw=0.8))
+    ax.yaxis.grid(True, color=GRID, lw=0.8); ax.set_ylim(0, None)
+    ax.set_ylabel("Trips per week", color=INK2, fontsize=9); ax.set_xlabel("Week starting (month-day)", color=INK2, fontsize=9)
+    ax.legend(frameon=False, fontsize=9, loc="lower right")
+    ax.set_title("Usage is steady week to week, with casual riding edging up", loc="left", color=INK, fontsize=12, fontweight="bold")
+    fig.tight_layout(); fig.savefig(OUT / "chart5_weekly_trend.png", dpi=200); plt.close(fig)
+
+    # Chart 6 - complaints by category per month (small multiples, shared axis)
+    cats = complaints_m.sum().sort_values(ascending=False).index
+    fig, axes = plt.subplots(1, len(cats), figsize=(9, 3), sharey=True); 
+    for ax, cat in zip(axes, cats):
+        style(ax); v = complaints_m[cat]
+        ax.bar(range(len(v)), v.values, color=ORANGE if cat == "Availability" else BLUE, width=0.6)
+        ax.set_xticks(range(len(v))); ax.set_xticklabels([pd.Period(m).strftime("%b") for m in v.index])
+        ax.set_title(cat, fontsize=9.5, color=INK, loc="left"); ax.yaxis.grid(True, color=GRID, lw=0.8)
+        for i, n in enumerate(v.values):
+            ax.text(i, n + 0.4, str(n), ha="center", fontsize=8, color=INK2)
+    axes[0].set_ylabel("Negative comments", color=INK2, fontsize=9)
+    fig.suptitle("Availability complaints jumped in March while billing complaints fell every month",
+                 x=0.02, ha="left", color=INK, fontsize=11.5, fontweight="bold")
+    fig.tight_layout(rect=(0, 0, 1, 0.92)); fig.savefig(OUT / "chart6_complaint_trend.png", dpi=200); plt.close(fig)
 
 
 if __name__ == "__main__":

@@ -102,24 +102,43 @@ E.push(img("chart1_peak_imbalance.png", 560, 354));
 E.push(img("chart2_hourly_demand.png", 520, 260));
 
 E.push(h1("6. A chart of availability vs usage, to show the need to restock"));
-E.push(p("There is no dock-level inventory data (no 'bikes on hand at 08:00' field), so availability has to be **estimated from the trips**. The method, which you need to state as an assumption:"));
-E.push(bullet("For each station and day, go through departures (−1) and arrivals (+1) in time order and keep a running total."));
-E.push(bullet("The lowest point of that total is the most bikes the station lost before getting any back, which is how many it needed at opening to avoid running out."));
-E.push(bullet("Take the 90th percentile across days: the opening stock that would have avoided an empty station on 9 days in 10. Compare it with dock capacity."));
-E.push(table([2300, 1500, 1500, 1500, 2226], [
-  ["Station", "Docks", "Needed at opening (9 in 10 days)", "Worst day", "Days empty if opened half-full"],
-  ["Raffles Place", "15", "7 (47%)", "10", "3"],
-  ["Tanjong Pagar", "15", "6 (40%)", "8", "0"],
-  ["Marina Bay", "20", "7 (35%)", "12", "1"],
-  ["one-north", "20", "6 (30%)", "9", "0"],
-  ["Clarke Quay / Changi Business Park", "30", "7 (23%)", "12 / 14", "0"],
-  ["All other 14 stations", "15–30", "3 (10–20%)", "4–7", "0"],
-]));
-E.push(img("chart4_restock_need.png", 540, 381));
-E.push(p("The business message: six stations need a real morning stock target (6–7 bikes), and Raffles Place, with only 15 docks, has the least slack. The other fourteen need about 3. This chart answers business question 1 ('where are bikes running out?') directly, and fits 1c, because it turns into a restocking list with numbers."));
-E.push(p("**Assumptions to state:** no rebalancing truck moves appear in the data; each day is treated separately; and stock left overnight is unknown. Treat this as an estimate to confirm with the field team, not a measurement."));
+E.push(p("There is no dock-level inventory data (no 'bikes on hand at 08:00' field), so availability is **estimated from the trips**. For each station and day, the script walks through departures (−1) and arrivals (+1) in time order and keeps a running total. Two numbers come out of each day:"));
+E.push(bullet("**Largest loss:** the most bikes the station lost before getting any back. It must open with at least this many bikes, or someone finds it empty."));
+E.push(bullet("**Largest gain:** the most bikes it gained. It must open with at least this many free docks, or someone can't return a bike."));
+E.push(p("Using a 9-in-10-day level for both gives each station a **safe opening range** (minimum bikes to maximum bikes), and the target is the middle of it. Chart 4 shows the range inside each station's dock capacity, which is the 'availability vs usage' picture you wanted. Every station has a workable range. Raffles Place is the tightest, with only 7 to 12 bikes safe on 15 docks."));
+E.push(img("chart4_restock_need.png", 540, 394));
 
-E.push(h1("7. What the supervisor's loop is"));
+E.push(h1("7. Can we assume every station starts the day full?"));
+E.push(p("It is good that you want to state an opening assumption, because the analysis needs one. But **opening full is the wrong assumption, and the data shows why.** If every dock is full, there is nowhere to return a bike. I tested three opening rules on March data that the targets had not seen (targets were set on January–February):"));
+E.push(table([3200, 1800, 2000, 2026], [
+  ["Opening rule (March, 620 station-days)", "Days a rider finds no bike", "Days a rider finds no free dock", "Verdict"],
+  ["Every station full", "0", "433 (70%)", "Rejected: blocks returns"],
+  ["Every station half full", "0 (but 4 days in Jan–Feb)", "0", "Works most days"],
+  ["Station-specific target (middle of safe range)", "0", "0", "Recommended"],
+]));
+E.push(p("Two more facts support this. First, the fleet has 899 bike IDs but only 450 docks, so 'all docks full' is a choice about where the spare bikes sit, not a natural state. Second, if stations really opened full, 'docks were all full' would be the biggest complaint. It is only 12 of 300."));
+E.push(p("**What to assume instead (now in work_order.md):** each day starts at the station's opening target, reset overnight by the rebalancing team. Each day is treated separately, and the overnight reset is an assumption to confirm with operations, because the data doesn't record truck moves. Testing on unseen March data follows the course habit: never judge a rule on the data used to build it."));
+E.push(quote("**Suggested wording:** The data does not record rebalancing, so I assume each station is reset overnight to an opening target. Opening every station full was tested and rejected: on March data, arriving riders would have found no free dock on 433 of 620 station-days. Instead, each station opens in the middle of a safe range, with enough bikes for a 9-in-10 day's outflow and enough free docks for a 9-in-10 day's inflow. Targets set on January–February data gave no empty or full stations in March."));
+
+E.push(h1("8. Should trends be part of the report? Yes, with care"));
+E.push(p("A weekly report that only describes this week can't tell management whether things are getting better or worse, and three months of data is enough to show direction. What the data shows:"));
+E.push(table([2600, 6426], [
+  ["Trend", "Finding (per day, so month lengths don't distort it)"],
+  ["Usage", "70.9 → 71.3 → 74.4 trips a day (Jan → Mar). Casual riders 27.7 → 30.4, members flat (43.1 → 44.0). Complete weeks range from 468 to 545 trips"],
+  ["Stations", "Growing fastest: Woodlands +29%, Bishan and HarbourFront +23%. Falling: Paya Lebar −24%"],
+  ["Morning drain", "Raffles Place lost 1.2 bikes per weekday morning in January and 2.0 in March; Changi Business Park 1.9 → 2.4"],
+  ["Complaints", "Availability complaints 16 → 14 → 25 (a jump in March, as the morning drain grew). Billing complaints fell every month (16 → 10 → 8)"],
+  ["Holiday", "Member trips dip in the Chinese New Year week (16 Feb: 276, against 311 the week before); annotate it, don't delete it"],
+]));
+E.push(img("chart5_weekly_trend.png", 520, 260));
+E.push(img("chart6_complaint_trend.png", 540, 180));
+E.push(p("**How to present trends responsibly:**"));
+E.push(bullet("Compare complete weeks only; the first (1–4 Jan) and last (30–31 Mar) are partial."));
+E.push(bullet("In the weekly report, compare this week with the **average of the previous four weeks**, not just last week. One week is noisy: weekly trips swing between 468 and 545 with no real change."));
+E.push(bullet("Say what three months can't tell you. You can't separate a trend from seasonality (school holidays, Chinese New Year) without a year of data. 'Usage rose 5%' is a signal to watch, not proof of growth."));
+E.push(p("The link worth making in 1b and 1c: the stations losing the most bikes in the morning are losing more each month, and availability complaints jumped at the same time. That is the case for acting on the opening targets now."));
+
+E.push(h1("9. What the supervisor's loop is"));
 E.push(p("The course's supervisor's loop is **H-SAAF, the Human-Supervised Agentic Analytics Framework**: nine steps in three phases, always in the same order. Each step exists to prevent a known failure. The AI can do the work inside the loop, but a human owns it. Here it is mapped to the CityCycle pipeline:"));
 E.push(table([1500, 2100, 5426], [
   ["Phase", "Step", "In the CityCycle automation"],
@@ -135,7 +154,7 @@ E.push(table([1500, 2100, 5426], [
 ]));
 E.push(quote("**Suggested wording (replaces 'Following the supervisor's loop'):** The automation follows a human-supervised loop: a person frames the task and sets the definitions, the AI does the routine work, and a person verifies the result before it is recorded and released. Within that loop, four decisions stay with a human:"));
 
-E.push(h1("8. Why 'a clean run is a question, not an answer'"));
+E.push(h1("10. Why 'a clean run is a question, not an answer'"));
 E.push(p("A 'clean run' means the pipeline finished with no errors. That proves the code ran. It doesn't prove the numbers are right. Failures come in two kinds:"));
 E.push(table([4500, 4500], [
   ["Loud failure", "Silent failure"],
@@ -150,7 +169,7 @@ E.push(bullet("63 star ratings contradict their comment, and 26 pieces of praise
 E.push(p("An AI agent is built to finish the task and say 'done', so a clean run is where the human's checking **starts**: are the row counts right, do the totals reconcile, does the result make operational sense? For example, the CBD stations emptying in the morning, which is the opposite of the usual commuter flow."));
 E.push(quote("**Suggested wording:** A run that finishes without errors is treated as the start of checking, not the end. The CityCycle data passes every basic check, yet contains overlapping bike trips, mislabelled regions and ratings that contradict the comments, problems that only a deliberate check finds."));
 
-E.push(h1("9. Small fixes in your draft"));
+E.push(h1("11. Small fixes in your draft"));
 E.push(table([4000, 5026], [
   ["In your draft", "Change to"],
   ["Gen-AI (Claude) written, hum reviewed", "Claude-written, human-reviewed"],
@@ -204,7 +223,7 @@ const LOG = [
     "work_order.md definitions; Chart 3"],
   ["Phase 3 · BUILD: turn the design into a re-runnable workflow. Tool: Claude as a coding agent."],
   ["7", "____", "BUILD\nScript", "Turn the pipeline into a Python script I can re-run every week with a --week-start option. Morning peak is 07:00–09:00 and evening peak 17:30–19:30 on weekdays. Save a data-quality log, station flows, classified feedback, a facts.json file and four charts.",
-    "weekly_report.py; outputs in out/: data_quality_log.csv, station_peak_flows.csv, opening_stock_needed.csv, feedback_classified.csv, needs_review.csv, facts.json, four charts.",
+    "weekly_report.py; outputs in out/: data_quality_log.csv, station_peak_flows.csv, opening_plan.csv, feedback_classified.csv, needs_review.csv, facts.json, four charts.",
     "Ran it myself; compared total trips (6,500), top start station (Changi Business Park 533) and negative comments (218) with Excel pivots.",
     "Accepted.",
     "workflow/weekly_report.py; commit ____"],
@@ -214,18 +233,28 @@ const LOG = [
     "Accepted. Changed the peak definition from 07:00–10:00 to two windows.",
     "Chart 1; 1b findings"],
   ["9", "____", "BUILD\nRestock chart", "Can we show availability against usage to make the need to restock clearer? There is no dock-level data, so explain how you estimate it.",
-    "Opening-stock method (running loss per day, 90th percentile); Chart 4: Raffles Place needs 7 of 15 docks and would have been empty on 3 days if opened half-full.",
+    "Method: running loss and gain per station per day, 90th percentile; a safe opening range per station (enough bikes AND free docks). Chart 4: Raffles Place safe range 7–12 bikes on 15 docks.",
     "Hand-traced one day for Raffles Place in Excel (sorted departures and arrivals, running total).",
     "Accepted, with the assumption stated: no rebalancing moves recorded.",
-    "Chart 4; out/opening_stock_needed.csv"],
+    "Chart 4; out/opening_plan.csv"],
+  ["10", "____", "BREAK\nOpening full?", "Can we assume that at the start of each day the bikes are redeployed and every station is at full capacity? Test it against the data, and compare it with other opening rules on data the rule wasn't built from.",
+    "Opening full rejected: on unseen March data, riders would find no free dock on 433 of 620 station-days. Half full: 0 problems in March but 4 empty-station days in Jan–Feb. Station targets set on Jan–Feb: 0 problems in March. Fleet 899 bikes vs 450 docks.",
+    "Counted bike IDs and summed capacity in Excel; checked that only 12 of 300 comments say 'docks full'.",
+    "Modified my assumption: overnight reset to a station-specific target, not to full.",
+    "work_order.md (opening assumption); 1b; 1d assumptions"],
+  ["11", "____", "BUILD\nTrends", "We have three months of data. Add usage and complaint trends to the report: complete weeks only, this week vs the previous four-week average, monthly figures per day, and mark public holidays.",
+    "Trips per day 70.9 → 71.3 → 74.4; casual 27.7 → 30.4; Woodlands +29%, Paya Lebar −24%; Raffles Place morning drain 1.2 → 2.0; availability complaints 16 → 14 → 25; billing 16 → 10 → 8. Charts 5 and 6.",
+    "Monthly pivot of trips divided by days in the month; Chinese New Year week (16 Feb) checked against the calendar.",
+    "Accepted. Noted that three months can't separate trend from seasonality.",
+    "Charts 5–6; out/trend_*.csv; 1b, 1c"],
   ["Phase 4 · DEFEND: prove the automation can be trusted before relying on it."],
-  ["10", "____", "DEFEND\nNumber check", "Write a check that confirms every number in the drafted report appears in facts.json, then test it with a draft that contains one wrong number.",
+  ["12", "____", "DEFEND\nNumber check", "Write a check that confirms every number in the drafted report appears in facts.json, then test it with a draft that contains one wrong number.",
     "verify_report.py. Test: 10 of 11 numbers traced; '540 trips at Changi Business Park' flagged UNTRACED (true value 533); exit code 1.",
     "Re-ran the test myself and saw the failure.",
     "Accepted. Limitation noted: it confirms a number exists, not that it's attached to the right station.",
     "workflow/verify_report.py; 1a step 5; 1d"],
-  ["11", "____", "DEFEND\nWorked example", "(to do in 1b) Run the pipeline for the week of 23–29 March 2026 from start to finish and draft the report from facts.json.", "", "", "", "1b worked example"],
-  ["12", "____", "BUILD\nDraft report", "(to do in 1b) Using ONLY the figures in facts.json, write the weekly operations report in this template …", "", "", "", "1b output"],
+  ["13", "____", "DEFEND\nWorked example", "(to do in 1b) Run the pipeline for the week of 23–29 March 2026 from start to finish and draft the report from facts.json.", "", "", "", "1b worked example"],
+  ["14", "____", "BUILD\nDraft report", "(to do in 1b) Using ONLY the figures in facts.json, write the weekly operations report in this template …", "", "", "", "1b output"],
 ];
 const LOG_TIPS = [
   "**Prompts must be the ones you actually ran.** These are written to match what you want the log to show. Run them yourself, in a fresh Claude chat with only the CityCycle data attached, then paste the real response into 'What the AI produced' and save the full output as a file in ai_use_log/outputs/. Then the log is true, and it holds up in a viva.",

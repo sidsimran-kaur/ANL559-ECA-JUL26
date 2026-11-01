@@ -28,7 +28,7 @@ python workflow/verify_report.py out/report_draft.md      # number check on a dr
 ## Pipeline
 
 1. **Validate**: data contract; a FAIL stops the run (`out/data_quality_log.csv`)
-2. **Compute**: weekday peaks 07:00–09:00 and 17:30–19:30, busiest stations, opening stock needed
+2. **Compute**: weekday peaks 07:00–09:00 and 17:30–19:30, busiest stations, safe opening range per station (tested on unseen weeks), usage and complaint trends
 3. **Classify**: theme and sentiment from the comment text, severity from the stars; disagreements go to `out/needs_review.csv`
 4. **Facts**: `out/facts.json`, the only numbers the language model may quote
 5. **Check**: `verify_report.py`, then the analyst reviews and the operations manager signs off
