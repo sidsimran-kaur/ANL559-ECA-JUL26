@@ -1,0 +1,21 @@
+station,avg_day,p90_day,worst_day,capacity,days_empty_if_half_full,p90_pct_capacity
+Raffles Place,3.3,7.0,10,15,3,47.0
+Tanjong Pagar,3.3,6.0,8,15,0,40.0
+Marina Bay,3.6,7.0,12,20,1,35.0
+one-north,3.0,6.0,9,20,0,30.0
+Clarke Quay,3.4,7.0,12,30,0,23.0
+Changi Business Park,3.8,7.0,14,30,0,23.0
+Pasir Ris,1.0,3.0,6,15,0,20.0
+Jurong East,1.3,3.0,6,15,0,20.0
+Orchard,0.9,3.0,4,15,0,20.0
+Tampines Hub,1.3,3.0,6,15,0,20.0
+Paya Lebar,1.2,3.0,7,20,0,15.0
+Ang Mo Kio,1.2,3.0,5,20,0,15.0
+Woodlands,1.3,3.0,6,25,0,12.0
+Somerset,1.1,3.0,6,25,0,12.0
+Bugis,1.1,3.0,5,25,0,12.0
+Serangoon,0.9,3.0,6,25,0,12.0
+Buona Vista,1.0,3.0,5,30,0,10.0
+Bishan,1.0,3.0,6,30,0,10.0
+HarbourFront,1.3,3.0,7,30,0,10.0
+Sentosa,1.0,3.0,5,30,0,10.0

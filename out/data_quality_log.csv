@@ -1,0 +1,14 @@
+level,check,count,note
+ok,trip_id unique,0,
+ok,no blank trip fields,0,
+ok,stations exist in station table,0,
+ok,duration = end - start,0,
+ok,duration 1-180 min,0,
+WARN,bike not on two trips at once,14,"same bike_id on two overlapping trips: ID or logging error. Examples: C002070, C004402, C003946"
+WARN,round trips (start = end station),340,"valid, but they don't move bikes between stations"
+WARN,distance consistent per station pair,380,median std 1.38 km for the same pair: distance is approximate
+WARN,station region matches URA planning region,14,Raffles Place: 'North-East' vs URA 'Central'; Tanjong Pagar: 'West' vs URA 'Central'; Bugis: 'North' vs URA 'Central'; Somerset: 'East' vs URA 'Central'; Jurong East: 'North-East' vs URA 'West'; Woodlands: 'North-East' vs URA 'North'; Sentosa: 'West' vs URA 'Central'; one-north: 'East' vs URA 'Central'; Buona Vista: 'East' vs URA 'Central'; Serangoon: 'Central' vs URA 'North-East'; Ang Mo Kio: 'East' vs URA 'North-East'; Clarke Quay: 'West' vs URA 'Central'; HarbourFront: 'East' vs URA 'Central'; Changi Business Park: 'North' vs URA 'East'
+ok,feedback_id unique,0,
+ok,rating 1-5,0,
+ok,every comment has an approved theme,0,new comment types go to a human first
+WARN,feedback has no station field,300,complaints can't be tied to a station
