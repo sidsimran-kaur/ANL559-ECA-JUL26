@@ -1,13 +1,13 @@
 theme,n,avg_rating,high_severity
 App GPS wrong station,27,4.19,1
-No bikes (morning),27,2.67,12
-App crash on unlock,25,2.32,15
+No bikes (morning),26,2.65,12
+App crash on unlock,24,2.38,14
 App payment failure,23,2.61,12
 Double charge,23,2.52,12
 Brakes loose,20,2.55,12
-Flat tyre,17,2.76,6
 No bikes (peak hour),16,4.5,1
-"Docks full, can't return",12,3.0,2
+Flat tyre,16,2.75,6
 Unexpected late fee,11,2.64,4
+"Docks full, can't return",11,3.09,1
 Wobbly seat,11,2.45,6
 Gears slipping,6,2.5,4

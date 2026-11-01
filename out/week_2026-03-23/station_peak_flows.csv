@@ -1,23 +1,23 @@
-,Morning peak (07:00-09:00),Morning peak (07:00-09:00),Morning peak (07:00-09:00),Evening peak (17:30-19:30),Evening peak (17:30-19:30),Evening peak (17:30-19:30)
-,departures,arrivals,net_leaving,departures,arrivals,net_leaving
-station,,,,,,
-Raffles Place,2.4,0.2,2.2,0.6,0.8,-0.2
-Tanjong Pagar,2.8,0.2,2.6,0.8,1.4,-0.6
-Marina Bay,2.4,0.2,2.2,1.4,1.0,0.4
-Bugis,0.2,0.2,0.0,0.2,1.2,-1.0
-Orchard,0.0,0.8,-0.8,1.4,0.8,0.6
-Somerset,0.0,0.6,-0.6,0.8,0.6,0.2
-Tampines Hub,0.0,0.8,-0.8,1.0,0.6,0.4
-Jurong East,0.2,0.4,-0.2,0.6,0.6,0.0
-Bishan,0.0,1.2,-1.2,1.0,0.6,0.4
-Woodlands,0.0,0.4,-0.4,2.0,2.2,-0.2
-Pasir Ris,0.2,0.4,-0.2,1.6,1.2,0.4
-Sentosa,0.0,1.2,-1.2,1.2,0.8,0.4
-one-north,2.8,1.2,1.6,1.0,1.2,-0.2
-Buona Vista,0.0,0.4,-0.4,0.8,0.0,0.8
-Paya Lebar,0.0,0.8,-0.8,0.6,0.4,0.2
-Serangoon,0.0,0.6,-0.6,1.2,1.6,-0.4
-Ang Mo Kio,0.0,0.6,-0.6,0.6,1.2,-0.6
-Clarke Quay,1.8,1.6,0.2,0.8,0.8,0.0
-HarbourFront,0.0,1.6,-1.6,1.2,1.4,-0.2
-Changi Business Park,3.0,0.6,2.4,1.2,0.8,0.4
+,Morning peak (08:00-10:00),Morning peak (08:00-10:00),Morning peak (08:00-10:00),Lunch peak (12:00-13:00),Lunch peak (12:00-13:00),Lunch peak (12:00-13:00),Evening peak (17:00-20:00),Evening peak (17:00-20:00),Evening peak (17:00-20:00)
+,departures,arrivals,net_leaving,departures,arrivals,net_leaving,departures,arrivals,net_leaving
+station,,,,,,,,,
+Raffles Place,2.6,0.0,2.6,0.4,0.4,0.0,1.0,1.4,-0.4
+Tanjong Pagar,3.8,1.0,2.8,0.4,0.2,0.2,1.2,2.0,-0.8
+Marina Bay,2.2,1.2,1.0,0.4,0.4,0.0,2.2,1.2,1.0
+Bugis,0.2,0.8,-0.6,0.2,0.2,0.0,0.8,2.0,-1.2
+Orchard,0.0,1.2,-1.2,0.4,0.0,0.4,1.6,1.0,0.6
+Somerset,0.2,0.8,-0.6,0.0,0.4,-0.4,1.2,0.8,0.4
+Tampines Hub,0.0,0.8,-0.8,0.4,0.2,0.2,1.6,1.0,0.6
+Jurong East,0.2,0.8,-0.6,0.6,0.2,0.4,1.2,1.0,0.2
+Bishan,0.0,1.4,-1.4,0.6,0.8,-0.2,1.0,0.8,0.2
+Woodlands,0.4,1.2,-0.8,0.6,0.4,0.2,3.2,2.8,0.4
+Pasir Ris,0.0,0.4,-0.4,0.2,0.0,0.2,1.6,1.2,0.4
+Sentosa,0.0,0.8,-0.8,0.6,0.4,0.2,1.4,1.4,0.0
+one-north,2.2,1.0,1.2,0.0,0.0,0.0,1.2,1.8,-0.6
+Buona Vista,0.0,0.8,-0.8,0.0,0.0,0.0,1.4,0.0,1.4
+Paya Lebar,0.0,1.0,-1.0,0.4,0.0,0.4,0.6,1.2,-0.6
+Serangoon,0.0,0.4,-0.4,0.0,0.2,-0.2,1.4,1.6,-0.2
+Ang Mo Kio,0.2,0.8,-0.6,0.4,0.2,0.2,0.8,1.6,-0.8
+Clarke Quay,3.2,1.0,2.2,0.0,0.6,-0.6,1.0,1.0,0.0
+HarbourFront,0.2,1.0,-0.8,0.8,0.2,0.6,1.8,1.6,0.2
+Changi Business Park,2.0,0.6,1.4,0.0,0.2,-0.2,1.6,1.4,0.2

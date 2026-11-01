@@ -1,0 +1,5 @@
+rule,riders_no_bike,riders_no_dock,bikes_moved_per_day,close_call_station_days,close_call_stations
+"open full, overnight only",0,224,16.0,140,"['Ang Mo Kio', 'Bishan', 'Bugis', 'Buona Vista', 'Changi Business Park', 'Clarke Quay', 'HarbourFront', 'Jurong East', 'Marina Bay', 'Orchard', 'Pasir Ris', 'Paya Lebar', 'Raffles Place', 'Sentosa', 'Serangoon', 'Somerset', 'Tampines Hub', 'Tanjong Pagar', 'Woodlands', 'one-north']"
+"open half full, overnight only",0,0,22.0,1,['Raffles Place']
+"open at target, overnight only",0,0,22.0,1,['Raffles Place']
+"open at target, overnight + 11:00 run",0,0,30.0,1,['Tanjong Pagar']

@@ -1,0 +1,164 @@
+[
+ [
+  "#",
+  "Date",
+  "Stage",
+  "What I asked (prompt)",
+  "What AI produced",
+  "What I checked",
+  "My decision",
+  "Evidence / where used"
+ ],
+ [
+  "Phase 1 \u2013 Explore (understand the data before automating)"
+ ],
+ [
+  "1",
+  "1 Nov 2026",
+  "BUILD Profile",
+  "This is the data set I have: CityCycle_trips.csv, CityCycle_stations.csv, CityCycle_feedback.csv and the combined CityCycle_data.xlsx. Before doing anything else, profile the data: rows, columns, data types, missing values, duplicate trip IDs, whether every station in the trips listed are in the station list, whether duration matched end minus start, and whether the excel workbook matches the CSVs. Do not fix anything yet. Show me what you find, with counts.",
+  "Profile:\n Trips: 6,500 x 9\n Stations: 20 x 3\n Feedback: 300 x 6\n No blanks or duplicate IDs noted\n All stations valid\n All durations computed consistent with data\n Workbooks are identical to CSVs \n Control totals: 112, 366 ride-minutes and 19,104.91 km travelled",
+  "Confirmed rows and column count per data source and sum of control totals.",
+  "Accepted. A clean profile is not proof, hence further tests are run in row 2.\n\nAccepted. A clean profile is not proof, so row 2 tests further.",
+  "Out/data_quality_log.csv; Report 1b data-quality section"
+ ],
+ [
+  "2",
+  "1 Nov 2026",
+  "BREAK\nCheck for silent failures",
+  "The basic checks pass. Look for problems a basic check would miss such as the same bike on overlapping trips, round trips, whether distance is consistent for the same pair of stations, whether each station\u2019s region matches where the station really is, whether start ratings agree with the comment text and whether the feedback category matches the comment.",
+  "14 overlapping bike trips (e.g. BK802 captured twice at 18:27 on 3 Feb)\n 340 round trips\n Distance varies by about 1.4km for the same station pair\n 14 of the 20 regions don\u2019t match the location (e.g. Raffles Place is in the Northeast Region)\n 63 rating-text conflicts\n 26 praise comments filed under \u2018Availability\u2019",
+  "Filtered BK802 on 3 Feb in Excel and looked up regions to sense make.",
+  "Accepted.\n\nRegion and distance fields will not be used.",
+  "Report 1b data-quality section; Report 1d risks section"
+ ],
+ [
+  "Phase 2 \u2013 DESIGN (specify the automation before building it)"
+ ],
+ [
+  "3",
+  "1 Nov 2026",
+  "BUILD Work Order",
+  "I would like to automate the process of generating CityCycle\u2019s weekly operations report which answers key management questions such as which stations are the busiest, where are bikes running out and  what are riders complaining about.\nWrite a work order for the automation with the goal, inputs, constraints, acceptance criteria and output.\n\nConstraints should include no personal data in prompts, all numbers to be computed in code, with the AI only able to quote numbers that the code produced.",
+  "Work-order table with requested information (goal, inputs, constraints, acceptance criteria, output).",
+  "Checked each element makes sense, set a 30-minute goal based on the fact that the manual process may probably take 4-6 hrs a week.",
+  "Modified.\n\nRaised the number of charts to be from 2 as required per ECA to 4 so that each question and the trend minimally can be addressed via a visualisation. \n\nAdded morning (7 to 9am) and evening peak windows (5.30 to 7.30pm) and the needs review list.",
+  "Workflow/work_order.md; Report 1a work-order table"
+ ],
+ [
+  "4",
+  "1 Nov 2026",
+  "BUILD Pipeline design",
+  "This is what I need the automated pipeline to do each week: \nvalidate the data and stop if a hard check fails;\ncompute station flows in the morning and evening peaks, the busiest stations and hourly demand;\nclassify each feedback comment into a theme and sentiment and flag safety issues;\nwrite all numbers into one facts file;\ndraft the report only from that file;\ncheck every number in the draft against it.",
+  "Five-step pipeline incorporating the following stages: Validate, Compute, Classify, Draft and Check outputs.",
+  "Did a one week walk through of the steps on paper; confirmed each step has a checkable output.",
+  "Accepted with edits to the wording of the steps.",
+  "Report 1a pipeline table"
+ ],
+ [
+  "5",
+  "1 Nov 2026",
+  "BUILD Taxonomy",
+  "Here are the distinct comment texts in the feedback file. Propose a theme and a sentiment (positive or negative) for each based on what the text says, not the star rating. Return JSON with fields comment_text, theme, sentiment, safety_flag.",
+  "18 comment texts mapped to 12 complaint themes and 4 praise themes. Safety flag on \u2018breaks felt loose\u2019.",
+  "Reviewed all 18 mappings to do a sense check; Confirmed every comment in the file maps to one theme.",
+  "Accepted as taxonomy v1\n\nAdded safety flags for \"brakes felt loose\" and \"gears slipping\".",
+  "THEMES in workflow/weekly_report.py; Report 1b feedback section"
+ ],
+ [
+  "6",
+  "1 Nov 2026",
+  "BREAK\nRating vs text",
+  "Should sentiment come from the star rating, and the comment text, or both? Show me where they disagree.",
+  "Text for sentiment, stars for severity.\n63 comments disagree e.g. For  comments relating to \u201chard to find a bike at peak hour\u201d, the star ratings averaged 4.5 stars.",
+  "Pivoted the comment text x average rating in Excel",
+  "Accepted.\nDisagreements go to needs_review.csv.\n\nUseful to retain the rating field rather than discard as we are able to assess what factors affect sentiments more and should be addressed promptly.",
+  "work_order.md definitions; Chart 3"
+ ],
+ [
+  "Phase 3 \u2013 BUILD (turn the design into a re-runnable workflow using Claude as a coding agent)"
+ ],
+ [
+  "7",
+  "1 Nov 2026",
+  "BUILD Script",
+  "Turn the pipeline into a Python script I can re-run every week with a - week start option. Morning peak is determined to be 7:00 to 9:00am and evening peak is 17:30 to 19:30pm on weekdays. \n\nSave a data quality log, station flows, classified feedback, a facts.json file and four charts.",
+  "weekly_report.py \noutputs in out/:data_quality_log.csv, station_peak_flows.csv, opening_plan.csv, feedback_classified.csv, needs_review.csv, \nfacts.json and four charts.",
+  "Ran it myself; compared total trips (6,500), top start station (Changi Business Park) and negative comments (218) with Excel pivots.",
+  "Accepted.",
+  "workflow/weekly_report.py; commit ____"
+ ],
+ [
+  "8",
+  "1 Nov 2026",
+  "BREAK Two peaks",
+  "Is there a morning and an evening peak? Is the peak consistently during the hours identified or is it fluid? Does the evening peak put the bikes back?",
+  "In the morning, 6 stations lose between 1.6 to 2.1 bikes every weekday. In the evening, all stations are between  -0.6 and +0,4, so the losses build up)\n\nMorning: six stations lose 1.6\u20132.1 bikes per weekday. Evening: all stations between \u22120.6 and +0.4, so losses build up (Changi Business Park \u2212211 over the quarter).",
+  "Pivot: Marina Bay weekday departures and arrivals 07:00\u201309:00, divided by 64 weekdays.",
+  "Accepted. Changed the peak definition from 07:00\u201310:00 to two windows.",
+  "Chart 1; 1b findings"
+ ],
+ [
+  "9",
+  "____",
+  "BUILD\nRestock chart",
+  "Can we show availability against usage to make the need to restock clearer? There is no dock-level data, so explain how you estimate it.",
+  "Method: running loss and gain per station per day, 90th percentile; a safe opening range per station (enough bikes AND free docks). Chart 4: Raffles Place safe range 7\u201312 bikes on 15 docks.",
+  "Hand-traced one day for Raffles Place in Excel (sorted departures and arrivals, running total).",
+  "Accepted, with the assumption stated: no rebalancing moves recorded.",
+  "Chart 4; out/opening_plan.csv"
+ ],
+ [
+  "10",
+  "____",
+  "BREAK\nOpening full?",
+  "Can we assume that at the start of each day the bikes are redeployed and every station is at full capacity? Test it against the data, and compare it with other opening rules on data the rule wasn't built from.",
+  "Opening full rejected: on unseen March data, riders would find no free dock on 433 of 620 station-days. Half full: 0 problems in March but 4 empty-station days in Jan\u2013Feb. Station targets set on Jan\u2013Feb: 0 problems in March. Fleet 899 bikes vs 450 docks.",
+  "Counted bike IDs and summed capacity in Excel; checked that only 12 of 300 comments say 'docks full'.",
+  "Modified my assumption: overnight reset to a station-specific target, not to full.",
+  "work_order.md (opening assumption); 1b; 1d assumptions"
+ ],
+ [
+  "11",
+  "____",
+  "BUILD\nTrends",
+  "We have three months of data. Add usage and complaint trends to the report: complete weeks only, this week vs the previous four-week average, monthly figures per day, and mark public holidays.",
+  "Trips per day 70.9 \u2192 71.3 \u2192 74.4; casual 27.7 \u2192 30.4; Woodlands +29%, Paya Lebar \u221224%; Raffles Place morning drain 1.2 \u2192 2.0; availability complaints 16 \u2192 14 \u2192 25; billing 16 \u2192 10 \u2192 8. Charts 5 and 6.",
+  "Monthly pivot of trips divided by days in the month; Chinese New Year week (16 Feb) checked against the calendar.",
+  "Accepted. Noted that three months can't separate trend from seasonality.",
+  "Charts 5\u20136; out/trend_*.csv; 1b, 1c"
+ ],
+ [
+  "Phase 4 \u00b7 DEFEND: prove the automation can be trusted before relying on it."
+ ],
+ [
+  "12",
+  "____",
+  "DEFEND\nNumber check",
+  "Write a check that confirms every number in the drafted report appears in facts.json, then test it with a draft that contains one wrong number.",
+  "verify_report.py. Test: 10 of 11 numbers traced; '540 trips at Changi Business Park' flagged UNTRACED (true value 533); exit code 1.",
+  "Re-ran the test myself and saw the failure.",
+  "Accepted. Limitation noted: it confirms a number exists, not that it's attached to the right station.",
+  "workflow/verify_report.py; 1a step 5; 1d"
+ ],
+ [
+  "13",
+  "____",
+  "DEFEND\nWorked example",
+  "(to do in 1b) Run the pipeline for the week of 23\u201329 March 2026 from start to finish and draft the report from facts.json.",
+  "",
+  "",
+  "",
+  "1b worked example"
+ ],
+ [
+  "14",
+  "____",
+  "BUILD\nDraft report",
+  "(to do in 1b) Using ONLY the figures in facts.json, write the weekly operations report in this template \u2026",
+  "",
+  "",
+  "",
+  "1b output"
+ ]
+]

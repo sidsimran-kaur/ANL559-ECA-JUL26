@@ -1,32 +1,44 @@
 # CityCycle weekly operations report · 23–29 March 2026 · DRAFT
 
-**Headline:** Riders took 486 trips this week (69.4 a day), 8.1% below the average of the previous four weeks (529.0). Tanjong Pagar, Changi Business Park, Raffles Place and Marina Bay again lost bikes every weekday morning. Holding them at their opening targets would have kept every station stocked this week.
+**Headline:** Riders took 486 trips (69.4 a day), 8.1% below the previous four-week average of 529.0 but inside the normal weekly range (468 to 545). Business-district stations again lost bikes every weekday morning. Rebalancing overnight to each station's opening target was enough: no rider found an empty station or a full dock. No safety complaints this week.
 
-## 1. Where bikes are running out (restocking actions)
+## 1. Peak hours (approved and re-checked)
 
-| Station | Net bikes lost per weekday morning (07:00–09:00) | Opening target (safe range) | Docks |
-|---|---|---|---|
-| Tanjong Pagar | 2.6 | 10 (6–13) | 15 |
-| Changi Business Park | 2.4 | 18 (7–28) | 30 |
-| Raffles Place | 2.2 | 10 (7–12) | 15 |
-| Marina Bay | 2.2 | 12 (7–17) | 20 |
-| one-north | 1.6 | 12 (6–17) | 20 |
+The peaks detected this run match the approved windows: 08:00–10:00, 12:00–13:00 and 17:00–20:00 on weekdays. 08:00 was the busiest morning hour in 10 of the last 12 complete weeks, and 18:00 the busiest evening hour in 11 of 12. Together the peaks carry 71.8% of weekday trips. Weekends have no commuter peak; the busiest slot is 13:30–14:00.
 
-The evening peak (17:30–19:30) stayed between -1.0 and 0.8 bikes per station, so it doesn't replace the morning losses. **Action:** the rebalancing team restocks these five stations to target before 07:00 each weekday. Opening every station full would have blocked returns on 96 of 140 station-days this week; the station targets gave 0 empty and 0 full station-days.
+## 2. Where bikes run out
 
-## 2. Busiest stations and usage trend
+Net bikes lost per weekday in the morning peak: Tanjong Pagar 2.8, Raffles Place 2.6, Clarke Quay 2.2, Changi Business Park 1.4, one-north 1.2, Marina Bay 1.0. The evening peak does not reverse this: every station stayed between -1.2 and 1.4.
 
-Busiest start stations: Changi Business Park 42 trips, Tanjong Pagar 39, Marina Bay 39, Raffles Place 35, Woodlands 33. Members made 62.8% of trips, averaging 14.3 minutes; casual riders averaged 21.2 minutes. This week's dip is within the normal weekly range (468 to 545 trips), so it is one to watch, not yet a trend.
+## 3. Rebalancing plan for next week: overnight, at the end of each day
 
-## 3. What riders are saying
+| Rule tested on this week | Riders turned away | Bikes moved per day |
+|---|---|---|
+| Open every station full | 224 (no free dock) | 16.0 |
+| Open at target, overnight only | 0 | 22.0 |
+| Open at target, overnight + 11:00 run | 0 | 30.0 |
 
-21 comments this week: 14 negative and 7 positive by their text, with an average rating of 4.0. Top issues: App GPS shows the wrong station (4), no bikes in the morning (3), hard to find a bike at peak hour (2), double charge (2), wobbly seat (2). No safety (brake) complaints this week. **Action:** forward the GPS issue to the app team.
+**Recommendation:** rebalance overnight only. A midday run moves more bikes and turns away no fewer riders.
 
-## 4. Data caveats (for the reader)
+Each weekday night, deliver to Raffles Place 4, Changi Business Park 3, Marina Bay 3, Tanjong Pagar 2, and Jurong East, one-north and Clarke Quay 1 each (15 bikes). Collect from Serangoon 3; Bishan, Bugis, Paya Lebar and Somerset 2 each; Ang Mo Kio, Sentosa, HarbourFront and Buona Vista 1 each. Suggested pairings: Serangoon → Raffles Place 3; Bishan → Changi Business Park 2; Paya Lebar → Marina Bay 2; the rest 1 bike each (see rebalancing_transfers.csv). Weekend nights need 11 bikes moved.
 
-- 10 comments have a star rating that contradicts the text (e.g. 'hard to find a bike at peak hour' rated 5 stars). They are listed in needs_review.csv; this report goes by the text.
-- The station region field does not match location for 14 stations, so no regional breakdown is given.
-- Distance is approximate, and comments carry no station, so complaints can't be tied to a station.
-- Opening targets are estimates from trip data; overnight rebalancing is not recorded.
+**Opening targets for next week:** Raffles Place 8, Tanjong Pagar 9, Marina Bay 12, one-north 12, Clarke Quay 16, Changi Business Park 18 (all 20 stations in rebalancing_plan.csv).
 
-*Prepared automatically from facts.json · Checked by verify_report.py · Reviewed by: ________ · Approved by: ________*
+**Watch list:** Raffles Place reached empty on one day without turning a rider away. If it happens on 2 or more days next week, raise its target.
+
+## 4. Busiest stations
+
+Changi Business Park 42 trips, Tanjong Pagar 39, Marina Bay 39, Raffles Place 35, Woodlands 33. Members made 62.8% of trips, averaging 14.3 minutes; casual riders averaged 21.2 minutes.
+
+## 5. What riders are saying
+
+21 comments: 14 negative and 7 positive by their text, average rating 4.0. Top issues: App GPS shows the wrong station 4, no bikes in the morning 3, wobbly seat 2, hard to find a bike at peak hour 2, double charge 2. **Safety:** no brake or gear complaints this week; 26 so far this quarter (20 brakes, 6 gears), each escalated to maintenance on the day it arrived.
+
+## 6. Data caveats
+
+- 10 comments have a star rating that contradicts the text; they are in needs_review.csv, and this report goes by the text.
+- The station region field doesn't match location for 14 stations, so no regional breakdown is given.
+- Distance is approximate, so transfers are paired by size, not by route; the ops team plans the route.
+- Rebalancing moves are not recorded in the data; the plan assumes each station is reset to its target overnight.
+
+*Prepared automatically from facts.json · Checked by verify_report.py and independent_check.py · Reviewed by: ________ · Approved by: ________*

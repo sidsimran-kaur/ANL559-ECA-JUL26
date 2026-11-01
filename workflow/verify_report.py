@@ -15,7 +15,7 @@ report_path = Path(sys.argv[1]).resolve()
 # use the facts.json next to the report if there is one (weekly runs), else the quarter's
 facts_path = report_path.parent / "facts.json" if (report_path.parent / "facts.json").exists() else ROOT / "out" / "facts.json"
 facts = json.loads(facts_path.read_text())
-print(f"Checking {report_path.name} against {facts_path.relative_to(ROOT)}")
+print(f"Checking {report_path.name} against {facts_path}")
 
 # Numbers that come from approved definitions in work_order.md, not from the data
 DEFINITION_NUMBERS = {7, 9, 17, 19, 30, 90, 1, 2, 3, 4, 5}

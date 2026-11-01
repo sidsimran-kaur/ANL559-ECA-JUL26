@@ -1,9 +1,12 @@
-Figure                               Independent  facts.json  Result
-Trips in week                                486         486  MATCH
-Trips per day                               69.4        69.4  MATCH
-Changi Business Park starts                   42          42  MATCH
-Tanjong Pagar morning net loss               2.6         2.6  MATCH
-Raffles Place morning net loss               2.2         2.2  MATCH
-Comments in week                              21          21  MATCH
-Negative comments (keyword rule)              14          14  MATCH
-Average rating                               4.0         4.0  MATCH
+Figure                                     Independent  Pipeline  Result
+Trips in week                                      486       486  MATCH
+Trips per day                                     69.4      69.4  MATCH
+Changi Business Park starts                         42        42  MATCH
+Tanjong Pagar morning net loss                     2.8       2.8  MATCH
+Raffles Place morning net loss                     2.6       2.6  MATCH
+Busiest weekday morning hour                         8         8  MATCH
+Busiest weekday evening hour                        18        18  MATCH
+Comments in week                                    21        21  MATCH
+Negative comments in week                           14        14  MATCH
+Safety comments to date (brakes + gears)            26        26  MATCH
+Plan balances: delivered = collected                15        15  MATCH

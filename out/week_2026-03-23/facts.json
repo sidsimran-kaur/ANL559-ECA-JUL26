@@ -1,8 +1,7 @@
 {
-  "window": {
+  "week": {
     "from": "2026-03-23",
-    "to": "2026-03-29",
-    "days": 7
+    "to": "2026-03-29"
   },
   "control_totals": {
     "trips_rows": 486,
@@ -35,11 +34,12 @@
     "member_share_pct": 62.8,
     "avg_minutes_member": 14.3,
     "avg_minutes_casual": 21.2,
-    "member_peak_hours": [
-      18,
-      8
-    ],
-    "casual_peak_hour": 14
+    "prior_4wk_avg": 529.0,
+    "vs_prior_4wk_avg_pct": -8.1,
+    "complete_week_range": [
+      468,
+      545
+    ]
   },
   "busiest_start_stations": {
     "Changi Business Park": 42,
@@ -48,74 +48,254 @@
     "Raffles Place": 35,
     "Woodlands": 33
   },
-  "morning_peak_draining": {
-    "Tanjong Pagar": 2.6,
-    "Changi Business Park": 2.4,
-    "Raffles Place": 2.2,
-    "Marina Bay": 2.2,
-    "one-north": 1.6,
-    "Clarke Quay": 0.2
+  "peaks": {
+    "approved": [
+      "08:00-10:00",
+      "12:00-13:00",
+      "17:00-20:00"
+    ],
+    "detected_this_run": [
+      "08:00-10:00",
+      "12:00-13:00",
+      "17:00-20:00"
+    ],
+    "match": true,
+    "rule_threshold_trips_per_slot": 3.19,
+    "weeks_checked": 12,
+    "weeks_busiest_morning_hour_08": 10,
+    "weeks_busiest_evening_hour_18": 11,
+    "share_of_weekday_trips_in_peaks_pct": 71.8,
+    "weekend_busiest_slot": "13:30-14:00"
   },
-  "evening_peak_net_leaving_range": [
-    -1.0,
-    0.8
+  "morning_peak_losing_bikes": {
+    "Tanjong Pagar": 2.8,
+    "Raffles Place": 2.6,
+    "Clarke Quay": 2.2,
+    "Changi Business Park": 1.4,
+    "one-north": 1.2,
+    "Marina Bay": 1.0
+  },
+  "evening_peak_net_range": [
+    -1.2,
+    1.4
   ],
-  "opening_plan_top": {
-    "Raffles Place": {
-      "capacity": 15,
-      "open_min": 7.0,
-      "open_max": 12.0,
-      "open_target": 10.0
+  "rebalancing": {
+    "timing_test_this_week": {
+      "open full, overnight only": {
+        "riders_no_bike": 0,
+        "riders_no_dock": 224,
+        "bikes_moved_per_day": 16.0,
+        "close_call_station_days": 140,
+        "close_call_stations": [
+          "Ang Mo Kio",
+          "Bishan",
+          "Bugis",
+          "Buona Vista",
+          "Changi Business Park",
+          "Clarke Quay",
+          "HarbourFront",
+          "Jurong East",
+          "Marina Bay",
+          "Orchard",
+          "Pasir Ris",
+          "Paya Lebar",
+          "Raffles Place",
+          "Sentosa",
+          "Serangoon",
+          "Somerset",
+          "Tampines Hub",
+          "Tanjong Pagar",
+          "Woodlands",
+          "one-north"
+        ]
+      },
+      "open half full, overnight only": {
+        "riders_no_bike": 0,
+        "riders_no_dock": 0,
+        "bikes_moved_per_day": 22.0,
+        "close_call_station_days": 1,
+        "close_call_stations": [
+          "Raffles Place"
+        ]
+      },
+      "open at target, overnight only": {
+        "riders_no_bike": 0,
+        "riders_no_dock": 0,
+        "bikes_moved_per_day": 22.0,
+        "close_call_station_days": 1,
+        "close_call_stations": [
+          "Raffles Place"
+        ]
+      },
+      "open at target, overnight + 11:00 run": {
+        "riders_no_bike": 0,
+        "riders_no_dock": 0,
+        "bikes_moved_per_day": 30.0,
+        "close_call_station_days": 1,
+        "close_call_stations": [
+          "Tanjong Pagar"
+        ]
+      }
     },
-    "Marina Bay": {
-      "capacity": 20,
-      "open_min": 7.0,
-      "open_max": 17.0,
-      "open_target": 12.0
+    "recommended_timing": "overnight (end of day)",
+    "midday_run_needed": false,
+    "weekday_deliver": {
+      "Raffles Place": 4,
+      "Changi Business Park": 3,
+      "Marina Bay": 3,
+      "Tanjong Pagar": 2,
+      "Jurong East": 1,
+      "one-north": 1,
+      "Clarke Quay": 1
     },
-    "Clarke Quay": {
-      "capacity": 30,
-      "open_min": 7.0,
-      "open_max": 27.0,
-      "open_target": 17.0
+    "weekday_collect": {
+      "Ang Mo Kio": 1,
+      "Sentosa": 1,
+      "HarbourFront": 1,
+      "Buona Vista": 1,
+      "Bishan": 2,
+      "Bugis": 2,
+      "Paya Lebar": 2,
+      "Somerset": 2,
+      "Serangoon": 3
     },
-    "Changi Business Park": {
-      "capacity": 30,
-      "open_min": 7.0,
-      "open_max": 28.0,
-      "open_target": 18.0
+    "weekday_bikes_to_move_per_night": 15,
+    "weekend_bikes_to_move_per_night": 11,
+    "targets_next_week": {
+      "Raffles Place": 8,
+      "Changi Business Park": 18,
+      "Marina Bay": 12,
+      "Tanjong Pagar": 9,
+      "Jurong East": 6,
+      "one-north": 12,
+      "Clarke Quay": 16,
+      "Pasir Ris": 8,
+      "Woodlands": 12,
+      "Tampines Hub": 8,
+      "Orchard": 7,
+      "Ang Mo Kio": 10,
+      "Sentosa": 14,
+      "HarbourFront": 14,
+      "Buona Vista": 15,
+      "Bishan": 14,
+      "Bugis": 12,
+      "Paya Lebar": 8,
+      "Somerset": 12,
+      "Serangoon": 11
     },
-    "Tanjong Pagar": {
-      "capacity": 15,
-      "open_min": 6.0,
-      "open_max": 13.0,
-      "open_target": 10.0
-    },
-    "one-north": {
-      "capacity": 20,
-      "open_min": 6.0,
-      "open_max": 17.0,
-      "open_target": 12.0
-    }
+    "all_targets_feasible": true,
+    "transfers": [
+      {
+        "from": "Serangoon",
+        "to": "Raffles Place",
+        "bikes": 3
+      },
+      {
+        "from": "Somerset",
+        "to": "Raffles Place",
+        "bikes": 1
+      },
+      {
+        "from": "Bishan",
+        "to": "Changi Business Park",
+        "bikes": 2
+      },
+      {
+        "from": "Bugis",
+        "to": "Changi Business Park",
+        "bikes": 1
+      },
+      {
+        "from": "Paya Lebar",
+        "to": "Marina Bay",
+        "bikes": 2
+      },
+      {
+        "from": "Somerset",
+        "to": "Marina Bay",
+        "bikes": 1
+      },
+      {
+        "from": "Bugis",
+        "to": "Tanjong Pagar",
+        "bikes": 1
+      },
+      {
+        "from": "Ang Mo Kio",
+        "to": "Tanjong Pagar",
+        "bikes": 1
+      },
+      {
+        "from": "Buona Vista",
+        "to": "Jurong East",
+        "bikes": 1
+      },
+      {
+        "from": "Sentosa",
+        "to": "one-north",
+        "bikes": 1
+      },
+      {
+        "from": "HarbourFront",
+        "to": "Clarke Quay",
+        "bikes": 1
+      }
+    ],
+    "watch_list": [
+      "Raffles Place"
+    ],
+    "watch_rule": "a station that hits empty or full on 2+ days in a week gets a higher/lower target; midday run only if riders are turned away"
   },
-  "opening_plan_all_feasible": true,
-  "opening_rule_test": {
-    "tested_on": "reporting week",
-    "full": {
-      "station_days": 140,
-      "no_bike": 0,
-      "no_free_dock": 96
+  "feedback_week": {
+    "total": 21,
+    "negative": 14,
+    "positive": 7,
+    "avg_rating": 4.0,
+    "top_issues": {
+      "App GPS wrong station": 4,
+      "No bikes (morning)": 3,
+      "Wobbly seat": 2,
+      "No bikes (peak hour)": 2,
+      "Double charge": 2
     },
-    "half": {
-      "station_days": 140,
-      "no_bike": 0,
-      "no_free_dock": 0
-    },
-    "target": {
-      "station_days": 140,
-      "no_bike": 0,
-      "no_free_dock": 0
-    }
+    "safety_escalations": 0,
+    "rating_text_disagree": 10
+  },
+  "feedback_to_date": {
+    "total": 296,
+    "negative": 214,
+    "positive": 82,
+    "safety_mentions": 26,
+    "brakes": 20,
+    "gears": 6,
+    "rating_text_disagree": 63,
+    "top_issues": [
+      {
+        "theme": "App GPS wrong station",
+        "n": 27,
+        "avg_rating": 4.19
+      },
+      {
+        "theme": "No bikes (morning)",
+        "n": 26,
+        "avg_rating": 2.65
+      },
+      {
+        "theme": "App crash on unlock",
+        "n": 24,
+        "avg_rating": 2.38
+      },
+      {
+        "theme": "App payment failure",
+        "n": 23,
+        "avg_rating": 2.61
+      },
+      {
+        "theme": "Double charge",
+        "n": 23,
+        "avg_rating": 2.52
+      }
+    ]
   },
   "trend": {
     "monthly": {
@@ -135,25 +315,7 @@
         "casual_per_day": 30.8
       }
     },
-    "weekly_trips_complete_weeks": {
-      "min": 468,
-      "max": 545,
-      "latest": 486,
-      "prior_4wk_avg": 529.0,
-      "latest_vs_prior_4wk_pct": -8.1
-    },
-    "station_change_pct_first_to_last_month": {
-      "fastest_growing": {
-        "Orchard": 23.0,
-        "Bishan": 30.0,
-        "Woodlands": 33.0
-      },
-      "falling": {
-        "Paya Lebar": -20.0,
-        "Tanjong Pagar": -7.0
-      }
-    },
-    "negative_comments_by_month": {
+    "complaints_by_month": {
       "2026-01": {
         "App": 26,
         "Availability": 16,
@@ -173,51 +335,5 @@
         "Billing": 8
       }
     }
-  },
-  "feedback": {
-    "total": 21,
-    "negative": 14,
-    "positive": 7,
-    "avg_rating": 4.0,
-    "top_issues": [
-      {
-        "theme": "App GPS wrong station",
-        "n": 4,
-        "avg_rating": 4.25,
-        "high_severity": 0
-      },
-      {
-        "theme": "No bikes (morning)",
-        "n": 3,
-        "avg_rating": 3.67,
-        "high_severity": 1
-      },
-      {
-        "theme": "No bikes (peak hour)",
-        "n": 2,
-        "avg_rating": 5.0,
-        "high_severity": 0
-      },
-      {
-        "theme": "Double charge",
-        "n": 2,
-        "avg_rating": 3.5,
-        "high_severity": 0
-      },
-      {
-        "theme": "Wobbly seat",
-        "n": 2,
-        "avg_rating": 3.5,
-        "high_severity": 0
-      },
-      {
-        "theme": "App payment failure",
-        "n": 1,
-        "avg_rating": 2.0,
-        "high_severity": 1
-      }
-    ],
-    "safety_mentions": 0,
-    "rating_text_disagree": 10
   }
 }

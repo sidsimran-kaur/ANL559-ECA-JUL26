@@ -1,4 +1,4 @@
-# ANL559 ECA · CityCycle weekly operations report automation
+# ANL559 ECA · CityCycle weekly operations report and rebalancing plan
 
 ANL559 Generative AI for Work Automation in Analytics, End-of-Course Assessment, July 2026.
 This is a private working repository and the audit trail for Question 1.
@@ -7,28 +7,31 @@ This is a private working repository and the audit trail for Question 1.
 
 ```bash
 pip install pandas matplotlib openpyxl
-python workflow/weekly_report.py                          # whole quarter
-python workflow/weekly_report.py --week-start 2026-03-23  # one reporting week
-python workflow/verify_report.py out/report_draft.md      # number check on a drafted report
+python workflow/weekly_report.py                              # latest complete week (default)
+python workflow/weekly_report.py --week-start 2026-03-16      # any other week
+python workflow/verify_report.py out/week_2026-03-23/weekly_report_draft.md
+python workflow/independent_check.py 2026-03-23
+cd workflow && python backtest_weeks.py                       # rebalancing timing on every testable week
 ```
+
+## Pipeline (v2)
+
+1. **Validate**: data contract on the reporting week; a FAIL stops the run
+2. **Compute**: peak hours detected from the data (weekday 30-min slots ≥ 1.5× average) and checked for week-to-week consistency; station flows in each peak
+3. **Rebalance**: the team resets every station overnight, so days are independent. Opening target per station from the latest 4 weeks; the week is replayed to compare overnight-only with overnight + 11:00 rebalancing; nightly move list and transfer pairs; watch list for near-misses
+4. **Classify**: theme and sentiment from text, severity from stars; brakes and gears are **safety** issues, escalated the same day
+5. **Facts**: `facts.json`, the only numbers the language model may quote; six charts
+6. **Check**: `verify_report.py` (every number traced), `independent_check.py` (key figures recomputed differently), then human review and sign-off
 
 ## Layout
 
 | Path | What it is |
 |---|---|
-| `data/raw/` | CityCycle trips, stations, feedback (CSV) and the combined workbook, as provided. Never edited |
-| `workflow/work_order.md` | The work order and approved definitions (peaks, severity, safety) |
-| `workflow/weekly_report.py` | Steps 1–4: validate, compute, classify, write `facts.json` and the charts |
-| `workflow/verify_report.py` | Step 5: every number in the draft must appear in `facts.json` |
-| `out/` | Generated outputs: data-quality log, flows, opening stock, classified feedback, needs-review list, `facts.json`, charts |
-| `ai_use_log/` | AI-use log (`.md` and `.docx`); full AI outputs go in `ai_use_log/outputs/` |
-| `docs/` | Notes for Question 1a: explainer and suggested wording |
-| `report/` | Report drafts (`.docx`) |
-
-## Pipeline
-
-1. **Validate**: data contract; a FAIL stops the run (`out/data_quality_log.csv`)
-2. **Compute**: weekday peaks 07:00–09:00 and 17:30–19:30, busiest stations, safe opening range per station (tested on unseen weeks), usage and complaint trends
-3. **Classify**: theme and sentiment from the comment text, severity from the stars; disagreements go to `out/needs_review.csv`
-4. **Facts**: `out/facts.json`, the only numbers the language model may quote
-5. **Check**: `verify_report.py`, then the analyst reviews and the operations manager signs off
+| `data/raw/` | CityCycle data as provided. Never edited |
+| `workflow/work_order.md` | Work order v2.0 and approved definitions |
+| `workflow/*.py` | Pipeline, checks, backtest |
+| `out/week_<Monday>/` | One folder per reporting week: facts, plan, safety list, review list, charts, draft report, check results |
+| `out/backtest_rebalancing_by_week.csv` | Overnight vs midday rebalancing on 8 weeks of unseen data |
+| `report/` | Write-up drafts (`ANL559_ECA_1a_1b_v3.docx` is current) and builder |
+| `ai_use_log/` | AI-use log v2 (`.docx`, `.md`); full AI outputs go in `outputs/` |
+| `docs/` | Earlier explainer (v1, superseded by v2 pipeline) |
