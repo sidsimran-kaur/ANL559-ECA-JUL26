@@ -1,0 +1,3 @@
+version,trips,trips_in_latest_week,peaks,targets_sum,riders_turned_away,bikes_moved_per_day
+keep all trips,6500,486,"08:00-10:00, 12:00-13:00, 17:00-20:00",228,0,22.0
+drop second trip of each pair,6486,486,"08:00-10:00, 12:00-13:00, 17:00-20:00",228,0,22.0

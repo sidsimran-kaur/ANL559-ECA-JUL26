@@ -90,10 +90,16 @@ def validate(t, s, f):
     calc = (t.end_time - t.start_time).dt.total_seconds() / 60
     n = ((calc - t.duration_min).abs() > 1).sum(); add("FAIL" if n else "ok", "duration = end - start", n)
     n = ((t.duration_min < 1) | (t.duration_min > 180)).sum(); add("WARN" if n else "ok", "duration 1-180 min", n)
-    ts = t.sort_values(["bike_id", "start_time"])
-    ov = ts[ts.groupby("bike_id").start_time.shift(-1) < ts.end_time]
-    add("WARN" if len(ov) else "ok", "bike not on two trips at once", len(ov),
-        ("examples: " + ", ".join(ov.trip_id.head(3))) if len(ov) else "")
+    ts = t.sort_values(["bike_id", "start_time"]).reset_index(drop=True)
+    first = ts.index[ts.groupby("bike_id").start_time.shift(-1) < ts.end_time]
+    pairs = pd.concat([ts.loc[first].assign(pair=range(len(first)), role="first"),
+                       ts.loc[first + 1].assign(pair=range(len(first)), role="second")]).sort_values(["pair", "role"])
+    pairs.to_csv(OUT / "overlapping_trips_review.csv", index=False)
+    add("WARN" if len(first) else "ok", "bike not on two trips at once", len(first),
+        f"{len(first)} pairs ({len(pairs)} trips) put one bike on two journeys at once, usually from different stations: "
+        "likely a mistyped bike_id. Both trips KEPT for station analysis (no basis to choose which is wrong; "
+        "dropping one changes no result); excluded only from any per-bike analysis. See overlapping_trips_review.csv"
+        if len(first) else "")
     add("WARN", "round trips (start = end station)", (t.start_station == t.end_station).sum(),
         "valid, but they don't move bikes between stations")
     sd = t[t.start_station != t.end_station].groupby(["start_station", "end_station"]).distance_km.std()

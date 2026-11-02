@@ -32,6 +32,6 @@ cd workflow && python backtest_weeks.py                       # rebalancing timi
 | `workflow/*.py` | Pipeline, checks, backtest |
 | `out/week_<Monday>/` | One folder per reporting week: facts, plan, safety list, review list, charts, draft report, check results |
 | `out/backtest_rebalancing_by_week.csv` | Overnight vs midday rebalancing on 8 weeks of unseen data |
-| `report/` | Write-up drafts (`ANL559_ECA_1a_1b_v3.docx` is current) and builder |
-| `ai_use_log/` | AI-use log v2 (`.docx`, `.md`); full AI outputs go in `outputs/` |
+| `report/` | Write-up drafts (`ANL559_ECA_1a_1b_v4.docx` is current (full sentences)) and builder |
+| `ai_use_log/` | AI-use log v3 (`.docx`, `.md`); full AI outputs go in `outputs/` |
 | `docs/` | Earlier explainer (v1, superseded by v2 pipeline) |
