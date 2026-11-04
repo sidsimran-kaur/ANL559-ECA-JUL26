@@ -163,9 +163,9 @@
       }
     },
     {
-      "phrase": "All 11 independent checks matched",
+      "phrase": "All 13 independent checks matched",
       "values": {
-        "11": [
+        "13": [
           "proc.independent_checks",
           "proc.independent_matched"
         ]
@@ -229,7 +229,7 @@
       }
     },
     {
-      "phrase": "Of 21 comments, 14 were negative, 10 went for review and none raised a safety issue",
+      "phrase": "Of 21 comments, 14 were negative, 10 had ratings that contradicted their text and were logged, and none raised a safety issue",
       "values": {
         "21": "week.comments",
         "14": "week.negative",

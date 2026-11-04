@@ -9,4 +9,6 @@ Busiest weekday evening hour                        18        18  MATCH
 Comments in week                                    21        21  MATCH
 Negative comments in week                           14        14  MATCH
 Safety comments to date (brakes + gears)            26        26  MATCH
+Rating-pattern changes vs last week (count)           2         2  MATCH
+Rating-pattern changes identical (1 = yes)           1         1  MATCH
 Plan balances: delivered = collected                15        15  MATCH

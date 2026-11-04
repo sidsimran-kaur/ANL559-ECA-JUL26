@@ -463,6 +463,13 @@ def main(week_start=None):
     themes_q.to_csv(OUT / "feedback_themes_to_week_end.csv")
 
     imp = rating_impact(f_all[f_all.date < we]); imp.to_csv(OUT / "rating_impact_to_week_end.csv")
+    # Review trigger (replaces reading every rating-text contradiction): flag a person only when a complaint
+    # type moves into or out of the watch list / 'hidden by high stars' compared with last week's data.
+    prev = rating_impact(f_all[f_all.date < ws])
+    tier = lambda d: {th: v.split(":")[0] for th, v in d.verdict.items() if v.startswith(("watch closely", "ratings unaffected"))}
+    now_t, prev_t = tier(imp), tier(prev)
+    pattern_changes = sorted({f"{th}: {prev_t.get(th, 'not flagged')} -> {now_t.get(th, 'not flagged')}"
+                              for th in set(now_t) | set(prev_t) if now_t.get(th) != prev_t.get(th)})
     weekly, monthly, comp = trends(t_all, f_all, we)
     weekly.to_csv(OUT / "trend_weekly_trips.csv"); monthly.to_csv(OUT / "trend_monthly.csv")
     comp.to_csv(OUT / "trend_complaints_by_month.csv")
@@ -510,7 +517,10 @@ def main(week_start=None):
                           "avg_rating": round(float(f.rating.mean()), 2) if len(f) else None,
                           "top_issues": neg.theme.value_counts().head(5).to_dict(),
                           "safety_escalations": int(f.safety.sum()),
-                          "rating_text_disagree": int(f.needs_review.sum())},
+                          "rating_text_disagree": int(f.needs_review.sum()),
+                          "rating_text_disagree_handling": "logged in needs_review.csv, not reviewed: sentiment comes from the text and stars give severity, so nothing is rejected",
+                          "rating_pattern_changes_vs_last_week": pattern_changes,
+                          "human_review_needed": bool(pattern_changes)},
         "feedback_to_week_end": {"window": f"{f_all.date.min().date()} to {(we - pd.Timedelta(days=1)).date()}", "total": len(f_upto), "negative": len(neg_q), "positive": int((f_upto.sentiment == "positive").sum()),
                              "safety_mentions": int(neg_q.safety.sum()),
                              "brakes": int((neg_q.theme == "Brakes loose").sum()),
