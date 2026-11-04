@@ -53,5 +53,86 @@
     "weeks_morning_08": 10,
     "weeks_evening_18": 11,
     "share_in_peaks_pct": 71.8
+  },
+  "rating_impact": {
+    "overall_avg_rating": 3.25,
+    "watch_closely": {
+      "App crash on unlock": {
+        "n": 25,
+        "avg_rating": 2.32,
+        "diff_vs_other_comments": -1.02,
+        "p_value": 0.0,
+        "avg_lift_if_fixed": 0.085
+      },
+      "Double charge": {
+        "n": 23,
+        "avg_rating": 2.52,
+        "diff_vs_other_comments": -0.79,
+        "p_value": 0.0024,
+        "avg_lift_if_fixed": 0.061
+      },
+      "No bikes (morning)": {
+        "n": 27,
+        "avg_rating": 2.67,
+        "diff_vs_other_comments": -0.64,
+        "p_value": 0.0088,
+        "avg_lift_if_fixed": 0.058
+      },
+      "App payment failure": {
+        "n": 23,
+        "avg_rating": 2.61,
+        "diff_vs_other_comments": -0.7,
+        "p_value": 0.0057,
+        "avg_lift_if_fixed": 0.054
+      },
+      "Brakes loose": {
+        "n": 20,
+        "avg_rating": 2.55,
+        "diff_vs_other_comments": -0.75,
+        "p_value": 0.0038,
+        "avg_lift_if_fixed": 0.05
+      }
+    },
+    "hidden_by_high_stars": {
+      "No bikes (peak hour)": {
+        "n": 16,
+        "avg_rating": 4.5,
+        "diff_vs_other_comments": 1.32
+      },
+      "App GPS wrong station": {
+        "n": 27,
+        "avg_rating": 4.19,
+        "diff_vs_other_comments": 1.02
+      }
+    },
+    "not_conclusive": {
+      "Wobbly seat": {
+        "n": 11,
+        "avg_rating": 2.45,
+        "p_value": 0.0206
+      },
+      "Flat tyre": {
+        "n": 17,
+        "avg_rating": 2.76,
+        "p_value": 0.0677
+      },
+      "Gears slipping": {
+        "n": 6,
+        "avg_rating": 2.5,
+        "p_value": 0.0908
+      }
+    },
+    "no_clear_effect": {
+      "Unexpected late fee": {
+        "n": 11,
+        "avg_rating": 2.64,
+        "p_value": 0.1059
+      },
+      "Docks full, can't return": {
+        "n": 12,
+        "avg_rating": 3.0,
+        "p_value": 0.4596
+      }
+    }
   }
 }

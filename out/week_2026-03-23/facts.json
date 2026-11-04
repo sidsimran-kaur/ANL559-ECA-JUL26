@@ -335,5 +335,23 @@
         "Billing": 8
       }
     }
+  },
+  "rating_watch_to_week_end": {
+    "watch_closely": {
+      "App crash on unlock": 2.38,
+      "Double charge": 2.52,
+      "No bikes (morning)": 2.65,
+      "App payment failure": 2.61,
+      "Brakes loose": 2.55
+    },
+    "hidden_by_high_stars": {
+      "No bikes (peak hour)": 4.5,
+      "App GPS wrong station": 4.19
+    },
+    "this_week_counts": {
+      "No bikes (morning)": 3,
+      "Double charge": 2,
+      "App payment failure": 1
+    }
   }
 }

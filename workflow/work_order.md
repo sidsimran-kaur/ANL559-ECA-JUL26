@@ -27,5 +27,6 @@ Any change to a definition below needs a new sign-off and a new version number.
 | Watch list | A station that hits empty or full on 2+ days in a week, even with no rider turned away, gets its target reviewed | Catches near-misses early |
 | Opening full | Rejected | Riders would find no free dock (224 riders in the week of 23 March) |
 | Sentiment / severity | Sentiment from the comment text; severity from stars (1–2 high, 3 medium, 4–5 low) | Ratings and text disagree in about 1 comment in 5 |
+| Rating watch list | Complaint types whose star ratings are lower than all other comments with Mann–Whitney p < 0.01, recomputed each run (`rating_impact.csv`). Types with significantly HIGHER stars are flagged as 'hidden by high stars' and tracked from the text | Shows which complaints hurt the rating most, and which ones the stars would hide |
 | Safety issue | Themes "Brakes loose" and "Gears slipping" | Escalated to the maintenance lead the same day; listed in `safety_escalations.csv` |
 | Trend | Complete weeks only; this week vs the previous 4-week average; monthly figures per day | Partial weeks and month lengths distort comparisons |
