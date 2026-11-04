@@ -1,4 +1,4 @@
-Checking ANL559_ECA_1a_1b_v9.docx (claims: report_claims.json, week 2026-03-23)
+Checking ANL559_ECA_1a_1b_v10.docx (claims: report_claims.json, week 2026-03-23)
 
 A. Write-up numbers vs independent recalculation
   ok           6,500  vs data.trips = 6500   "6,500 trips, 20 stations and 300 comments"
@@ -57,7 +57,7 @@ A. Write-up numbers vs independent recalculation
   ok              14  vs week.negative = 14   "Of 21 comments, 14 were negative, 10 had ratings that contra"
   ok              10  vs week.rating_text_disagree = 10   "Of 21 comments, 14 were negative, 10 had ratings that contra"
   ok            none  vs week.safety = 0   "Of 21 comments, 14 were negative, 10 had ratings that contra"
-  ok              87  vs proc.numbers_traced = 87   "All 87 numbers traced"
+  ok              88  vs proc.numbers_traced = 88   "All 88 numbers traced"
   ok              45  vs proc.planted_value = 45   "a planted error (45 trips instead of 42)"
   ok              42  vs proc.planted_true = 42   "a planted error (45 trips instead of 42)"
   ok            2.32  vs impact.App crash on unlock.avg = 2.32   "Five do: app crashes on unlock average 2.32 stars, 1.02 belo"

@@ -257,6 +257,19 @@
       "No bikes (peak hour)": 2,
       "Double charge": 2
     },
+    "complaints_by_theme": {
+      "App GPS wrong station": 4,
+      "No bikes (morning)": 3,
+      "Wobbly seat": 2,
+      "No bikes (peak hour)": 2,
+      "Double charge": 2,
+      "App payment failure": 1
+    },
+    "praise_by_theme": {
+      "Praise - app": 4,
+      "Praise - bike": 2,
+      "Praise - general": 1
+    },
     "safety_escalations": 0,
     "rating_text_disagree": 10,
     "rating_text_disagree_handling": "logged in needs_review.csv, not reviewed: sentiment comes from the text and stars give severity, so nothing is rejected",
