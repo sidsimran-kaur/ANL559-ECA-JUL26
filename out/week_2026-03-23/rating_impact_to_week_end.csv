@@ -1,0 +1,13 @@
+theme,n,avg_rating,pct_1_2_stars,diff_vs_other_comments,p_value,avg_lift_if_fixed,safety,verdict
+App crash on unlock,24,2.38,58,-0.97,0.0001,0.079,False,watch closely: lowers ratings
+Double charge,23,2.52,52,-0.81,0.002,0.063,False,watch closely: lowers ratings
+No bikes (morning),26,2.65,46,-0.67,0.0073,0.059,False,watch closely: lowers ratings
+App payment failure,23,2.61,52,-0.71,0.0048,0.055,False,watch closely: lowers ratings
+Brakes loose,20,2.55,60,-0.77,0.0032,0.052,True,watch closely: lowers ratings
+Wobbly seat,11,2.45,55,-0.84,0.0186,0.031,False,"lower, but not conclusive"
+Flat tyre,16,2.75,38,-0.55,0.0599,0.03,False,"lower, but not conclusive"
+Unexpected late fee,11,2.64,36,-0.65,0.0974,0.024,False,"lower, but not conclusive"
+Gears slipping,6,2.5,67,-0.78,0.0856,0.016,True,"lower, but not conclusive"
+"Docks full, can't return",11,3.09,9,-0.18,0.6414,0.007,False,no clear effect
+No bikes (peak hour),16,4.5,6,1.3,0.0,-0.07,False,ratings unaffected: watch the text
+App GPS wrong station,27,4.19,4,1.01,0.0,-0.092,False,ratings unaffected: watch the text

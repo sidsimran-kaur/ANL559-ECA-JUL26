@@ -32,7 +32,7 @@ Changi Business Park 42 trips, Tanjong Pagar 39, Marina Bay 39, Raffles Place 35
 
 ## 5. What riders are saying
 
-21 comments: 14 negative and 7 positive by their text, average rating 4.0. Top issues: App GPS shows the wrong station 4, no bikes in the morning 3, wobbly seat 2, hard to find a bike at peak hour 2, double charge 2. **Safety:** no brake or gear complaints this week; 26 so far this quarter (20 brakes, 6 gears), each escalated to maintenance on the day it arrived.
+21 comments: 14 negative and 7 positive by their text, average rating 4.0. Top issues: App GPS shows the wrong station 4, no bikes in the morning 3, wobbly seat 2, hard to find a bike at peak hour 2, double charge 2. **Rating watch list** (complaint types that clearly lower star ratings, 1 January to 29 March): app crashes on unlock 2.38 stars, double charges 2.52, loose brakes 2.55, app payment failures 2.61 and morning shortages 2.65. This week brought 3 morning-shortage, 2 double-charge and 1 payment-failure complaints. GPS errors (4.19 stars) and peak-hour shortages (4.5) barely affect ratings, so they are tracked from the text. **Safety:** no brake or gear complaints this week; 26 so far this quarter (20 brakes, 6 gears), each escalated to maintenance on the day it arrived.
 
 ## 6. Data caveats
 

@@ -35,6 +35,6 @@ python workflow/check_report_numbers.py                       # BEFORE SUBMITTIN
 | `out/week_<Monday>/` | One folder per reporting week: facts, plan, safety list, review list, charts, draft report, check results |
 | `out/dataset_summary/` | Whole-file (quarter) figures and complaint chart, for quarter statements |
 | `out/backtest_rebalancing_by_week.csv` | Overnight vs midday rebalancing on 8 weeks of unseen data |
-| `report/` | Write-up drafts (`ANL559_ECA_1a_1b_v5.docx` is current) and builder |
-| `ai_use_log/` | AI-use log v4 (`.docx`, `.md`); full AI outputs go in `outputs/` |
+| `report/` | Write-up drafts (`ANL559_ECA_1a_1b_v6.docx` is current) and builder |
+| `ai_use_log/` | AI-use log v5 (`.docx`, `.md`); full AI outputs go in `outputs/` |
 | `docs/` | Earlier explainer (v1, superseded by v2 pipeline) |

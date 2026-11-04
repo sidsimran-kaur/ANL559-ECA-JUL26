@@ -6,42 +6,269 @@
     "(step 5)",
     "30-minute slots with at least 1.5 times average demand",
     "per 30 minutes",
-    "I first assumed 07:00–09:00 and 17:30–19:30"
+    "I first assumed 07:00–09:00 and 17:30–19:30",
+    "Mann–Whitney test, p < 0.01"
   ],
   "claims": [
-    {"phrase": "6,500 trips, 20 stations and 300 comments", "values": {"6,500": "data.trips", "20": "data.stations", "300": "data.comments"}},
-    {"phrase": "14 pairs of trips place one bike on two journeys at once", "values": {"14": "data.overlap_pairs"}},
-    {"phrase": "In 13 pairs the trips start at different stations", "values": {"13": "data.overlap_pairs_different_start"}},
-    {"phrase": "14 of 20 station regions do not match", "values": {"14": "data.region_mismatch", "20": "data.stations"}},
-    {"phrase": "distance varies by about 1.4 km", "values": {"1.4": "data.distance_std_km"}},
-    {"phrase": "63 ratings contradict their comment", "values": {"63": "data.rating_text_disagree"}},
-    {"phrase": "This gives 08:00–10:00, 12:00–13:00 and 17:00–20:00", "values": {"08:00–10:00": "data.peak_windows", "12:00–13:00": "data.peak_windows", "17:00–20:00": "data.peak_windows"}},
-    {"phrase": "carrying 71.8% of weekday trips", "values": {"71.8": "data.share_in_peaks_pct"}},
-    {"phrase": "08:00 was the busiest morning hour in 10 of 12 complete weeks", "values": {"08:00": "data.busiest_morning_hour", "10": "data.weeks_busiest_08", "12": "data.complete_weeks"}},
-    {"phrase": "18:00 the busiest evening hour in 11", "values": {"18:00": "data.busiest_evening_hour", "11": "data.weeks_busiest_18"}},
-    {"phrase": "overnight rebalancing turned away no riders", "words": {"no": "reb.overnight_turned_away"}},
-    {"phrase": "raised bikes moved from 22 to 30 a day", "values": {"22": "reb.overnight_bikes_per_day", "30": "reb.midday_bikes_per_day"}},
-    {"phrase": "would have left 224 riders without a dock", "values": {"224": "reb.full_turned_away"}},
-    {"phrase": "turned away no riders in all eight weeks", "words": {"eight": ["reb.backtest_weeks", "reb.backtest_weeks_zero_turned_away"]}},
-    {"phrase": "The plan moves 15 bikes each weekday night", "values": {"15": "reb.weekday_bikes_per_night"}},
-    {"phrase": "Raffles Place reached empty once", "words": {"once": "reb.raffles_close_call_days"}},
-    {"phrase": "218 comments are negative and 82 positive", "values": {"218": "data.negative", "82": "data.positive"}},
-    {"phrase": "GPS errors and morning shortages lead with 27 each", "values": {"27": ["data.gps", "data.morning_shortage"]}},
-    {"phrase": "Brake (20) and gear (6) complaints", "values": {"20": "data.brakes", "6": "data.gears"}},
-    {"phrase": "Trips rose from 70.9 to 74.4 a day", "values": {"70.9": "data.jan_trips_per_day", "74.4": "data.mar_trips_per_day"}},
-    {"phrase": "8.1% below the four-week average", "values": {"8.1": "week.vs_prior_4wk_pct"}, "abs": true},
-    {"phrase": "normal range of 468 to 545", "values": {"468": "week.range_min", "545": "week.range_max"}},
-    {"phrase": "All 11 independent checks matched", "values": {"11": ["proc.independent_checks", "proc.independent_matched"]}},
-    {"phrase": "including 486 trips", "values": {"486": "week.trips"}},
-    {"phrase": "morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Place", "values": {"2.8": "week.morning_loss_tanjong_pagar", "2.6": "week.morning_loss_raffles_place"}},
-    {"phrase": "peaks at 08:00 and 18:00", "values": {"08:00": "data.busiest_morning_hour", "18:00": "data.busiest_evening_hour"}},
-    {"phrase": "26 safety comments", "values": {"26": ["to_week_end.safety", "data.safety"]}},
-    {"phrase": "15 bikes delivered and collected", "values": {"15": ["reb.weekday_bikes_per_night", "reb.weekday_collected"]}},
-    {"phrase": "loaded 486 trips and 21 comments", "values": {"486": "week.trips", "21": "week.comments"}},
-    {"phrase": "four warnings", "words": {"four": "week.warnings"}},
-    {"phrase": "overnight rebalancing of 15 bikes per weekday night", "values": {"15": "reb.weekday_bikes_per_night"}},
-    {"phrase": "Of 21 comments, 14 were negative, 10 went for review and none raised a safety issue", "values": {"21": "week.comments", "14": "week.negative", "10": "week.rating_text_disagree"}, "words": {"none": "week.safety"}},
-    {"phrase": "All 75 numbers traced", "values": {"75": "proc.numbers_traced"}},
-    {"phrase": "a planted error (45 trips instead of 42)", "values": {"45": "proc.planted_value", "42": "proc.planted_true"}}
+    {
+      "phrase": "6,500 trips, 20 stations and 300 comments",
+      "values": {
+        "6,500": "data.trips",
+        "20": "data.stations",
+        "300": "data.comments"
+      }
+    },
+    {
+      "phrase": "14 pairs of trips place one bike on two journeys at once",
+      "values": {
+        "14": "data.overlap_pairs"
+      }
+    },
+    {
+      "phrase": "In 13 pairs the trips start at different stations",
+      "values": {
+        "13": "data.overlap_pairs_different_start"
+      }
+    },
+    {
+      "phrase": "14 of 20 station regions do not match",
+      "values": {
+        "14": "data.region_mismatch",
+        "20": "data.stations"
+      }
+    },
+    {
+      "phrase": "distance varies by about 1.4 km",
+      "values": {
+        "1.4": "data.distance_std_km"
+      }
+    },
+    {
+      "phrase": "63 ratings contradict their comment",
+      "values": {
+        "63": "data.rating_text_disagree"
+      }
+    },
+    {
+      "phrase": "This gives 08:00–10:00, 12:00–13:00 and 17:00–20:00",
+      "values": {
+        "08:00–10:00": "data.peak_windows",
+        "12:00–13:00": "data.peak_windows",
+        "17:00–20:00": "data.peak_windows"
+      }
+    },
+    {
+      "phrase": "carrying 71.8% of weekday trips",
+      "values": {
+        "71.8": "data.share_in_peaks_pct"
+      }
+    },
+    {
+      "phrase": "08:00 was the busiest morning hour in 10 of 12 complete weeks",
+      "values": {
+        "08:00": "data.busiest_morning_hour",
+        "10": "data.weeks_busiest_08",
+        "12": "data.complete_weeks"
+      }
+    },
+    {
+      "phrase": "18:00 the busiest evening hour in 11",
+      "values": {
+        "18:00": "data.busiest_evening_hour",
+        "11": "data.weeks_busiest_18"
+      }
+    },
+    {
+      "phrase": "overnight rebalancing turned away no riders",
+      "words": {
+        "no": "reb.overnight_turned_away"
+      }
+    },
+    {
+      "phrase": "raised bikes moved from 22 to 30 a day",
+      "values": {
+        "22": "reb.overnight_bikes_per_day",
+        "30": "reb.midday_bikes_per_day"
+      }
+    },
+    {
+      "phrase": "would have left 224 riders without a dock",
+      "values": {
+        "224": "reb.full_turned_away"
+      }
+    },
+    {
+      "phrase": "turned away no riders in all eight weeks",
+      "words": {
+        "eight": [
+          "reb.backtest_weeks",
+          "reb.backtest_weeks_zero_turned_away"
+        ]
+      }
+    },
+    {
+      "phrase": "The plan moves 15 bikes each weekday night",
+      "values": {
+        "15": "reb.weekday_bikes_per_night"
+      }
+    },
+    {
+      "phrase": "Raffles Place reached empty once",
+      "words": {
+        "once": "reb.raffles_close_call_days"
+      }
+    },
+    {
+      "phrase": "218 comments are negative and 82 positive",
+      "values": {
+        "218": "data.negative",
+        "82": "data.positive"
+      }
+    },
+    {
+      "phrase": "GPS errors and morning shortages lead with 27 each",
+      "values": {
+        "27": [
+          "data.gps",
+          "data.morning_shortage"
+        ]
+      }
+    },
+    {
+      "phrase": "Brake (20) and gear (6) complaints",
+      "values": {
+        "20": "data.brakes",
+        "6": "data.gears"
+      }
+    },
+    {
+      "phrase": "Trips rose from 70.9 to 74.4 a day",
+      "values": {
+        "70.9": "data.jan_trips_per_day",
+        "74.4": "data.mar_trips_per_day"
+      }
+    },
+    {
+      "phrase": "8.1% below the four-week average",
+      "values": {
+        "8.1": "week.vs_prior_4wk_pct"
+      },
+      "abs": true
+    },
+    {
+      "phrase": "normal range of 468 to 545",
+      "values": {
+        "468": "week.range_min",
+        "545": "week.range_max"
+      }
+    },
+    {
+      "phrase": "All 11 independent checks matched",
+      "values": {
+        "11": [
+          "proc.independent_checks",
+          "proc.independent_matched"
+        ]
+      }
+    },
+    {
+      "phrase": "including 486 trips",
+      "values": {
+        "486": "week.trips"
+      }
+    },
+    {
+      "phrase": "morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Place",
+      "values": {
+        "2.8": "week.morning_loss_tanjong_pagar",
+        "2.6": "week.morning_loss_raffles_place"
+      }
+    },
+    {
+      "phrase": "peaks at 08:00 and 18:00",
+      "values": {
+        "08:00": "data.busiest_morning_hour",
+        "18:00": "data.busiest_evening_hour"
+      }
+    },
+    {
+      "phrase": "26 safety comments",
+      "values": {
+        "26": [
+          "to_week_end.safety",
+          "data.safety"
+        ]
+      }
+    },
+    {
+      "phrase": "15 bikes delivered and collected",
+      "values": {
+        "15": [
+          "reb.weekday_bikes_per_night",
+          "reb.weekday_collected"
+        ]
+      }
+    },
+    {
+      "phrase": "loaded 486 trips and 21 comments",
+      "values": {
+        "486": "week.trips",
+        "21": "week.comments"
+      }
+    },
+    {
+      "phrase": "four warnings",
+      "words": {
+        "four": "week.warnings"
+      }
+    },
+    {
+      "phrase": "overnight rebalancing of 15 bikes per weekday night",
+      "values": {
+        "15": "reb.weekday_bikes_per_night"
+      }
+    },
+    {
+      "phrase": "Of 21 comments, 14 were negative, 10 went for review and none raised a safety issue",
+      "values": {
+        "21": "week.comments",
+        "14": "week.negative",
+        "10": "week.rating_text_disagree"
+      },
+      "words": {
+        "none": "week.safety"
+      }
+    },
+    {
+      "phrase": "All 87 numbers traced",
+      "values": {
+        "87": "proc.numbers_traced"
+      }
+    },
+    {
+      "phrase": "a planted error (45 trips instead of 42)",
+      "values": {
+        "45": "proc.planted_value",
+        "42": "proc.planted_true"
+      }
+    },
+    {
+      "phrase": "Five do: app crashes on unlock average 2.32 stars, 1.02 below other comments",
+      "values": {
+        "2.32": "impact.App crash on unlock.avg",
+        "1.02": "impact.App crash on unlock.diff"
+      },
+      "words": {
+        "Five": "data.rating_watch_count"
+      },
+      "abs": true
+    },
+    {
+      "phrase": "GPS errors average 4.19 and peak-hour shortages 4.5",
+      "values": {
+        "4.19": "impact.App GPS wrong station.avg",
+        "4.5": "impact.No bikes (peak hour).avg"
+      }
+    }
   ]
 }

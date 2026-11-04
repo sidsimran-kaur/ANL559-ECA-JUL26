@@ -33,6 +33,34 @@ TRUE_REGION = {"Raffles Place": "Central", "Tanjong Pagar": "Central", "Marina B
 PEAKS = [(8 * 60, 10 * 60), (12 * 60, 13 * 60), (17 * 60, 20 * 60)]
 
 
+THEME_OF = {"the app keeps crashing when I unlock": "App crash on unlock", "payment failed in the app twice": "App payment failure",
+            "app GPS shows wrong station": "App GPS wrong station", "no bikes available at my station in the morning": "No bikes (morning)",
+            "hard to find a bike at peak hour": "No bikes (peak hour)", "docks were all full, couldn't return": "Docks full, can't return",
+            "brakes felt loose": "Brakes loose", "tyre was flat": "Flat tyre", "seat was wobbly": "Wobbly seat",
+            "gears slipping": "Gears slipping", "charged twice for one ride": "Double charge", "unexpected late fee": "Unexpected late fee"}
+
+
+def mann_whitney_p(a, b):
+    """Two-sided Mann-Whitney U, normal approximation with tie and continuity correction (written from the formula)."""
+    import math
+    allv = sorted([(v, 0) for v in a] + [(v, 1) for v in b])
+    ranks, i = {}, 0
+    vals = [v for v, _ in allv]
+    rank_of = {}
+    while i < len(vals):
+        j = i
+        while j + 1 < len(vals) and vals[j + 1] == vals[i]:
+            j += 1
+        rank_of[vals[i]] = (i + j) / 2 + 1
+        i = j + 1
+    n1, n2, N = len(a), len(b), len(a) + len(b)
+    u1 = sum(rank_of[v] for v in a) - n1 * (n1 + 1) / 2
+    ties = sum(c ** 3 - c for c in Counter(vals).values())
+    sigma = math.sqrt(n1 * n2 / 12 * ((N + 1) - ties / (N * (N - 1))))
+    z = (abs(u1 - n1 * n2 / 2) - 0.5) / sigma
+    return math.erfc(z / math.sqrt(2))
+
+
 def load():
     trips = list(csv.DictReader(open(ROOT / "data/raw/CityCycle_trips.csv", encoding="utf-8")))
     for r in trips:
@@ -127,6 +155,21 @@ def compute(week):
     T["data.morning_shortage"] = c[MORNING]; T["data.gps"] = c[GPS]
     T["data.brakes"] = c[BRAKES]; T["data.gears"] = c[GEARS]; T["data.safety"] = c[BRAKES] + c[GEARS]
     T["data.rating_text_disagree"] = sum(disagree(r) for r in fb)
+    T["data.avg_rating"] = round(statistics.mean(r["rating"] for r in fb), 2)
+    watch, hidden = [], []
+    for text, theme in THEME_OF.items():
+        mine = [r["rating"] for r in fb if r["comment_text"] == text]
+        rest = [r["rating"] for r in fb if r["comment_text"] != text]
+        key = "impact." + theme
+        T[key + ".n"] = len(mine)
+        T[key + ".avg"] = round(statistics.mean(mine), 2)
+        T[key + ".diff"] = round(statistics.mean(mine) - statistics.mean(rest), 2)
+        T[key + ".p"] = round(mann_whitney_p(mine, rest), 4)
+        T[key + ".pct_1_2"] = round(sum(x <= 2 for x in mine) / len(mine) * 100)
+        if T[key + ".p"] < 0.01:
+            (watch if T[key + ".diff"] < 0 else hidden).append(theme)
+    T["data.rating_watch_list"] = sorted(watch); T["data.rating_hidden_list"] = sorted(hidden)
+    T["data.rating_watch_count"] = len(watch)
     by_bike = defaultdict(list)
     for r in trips:
         by_bike[r["bike_id"]].append(r)

@@ -35,6 +35,7 @@ MIDDAY_RUN = 11 * 60        # candidate midday rebalancing time: the quiet gap b
 TARGET_WEEKS = 4            # opening targets use the latest 4 complete weeks
 TARGET_PCTL = 0.90          # enough bikes / free docks for 9 days in 10
 SAFETY_THEMES = {"Brakes loose", "Gears slipping"}
+WATCH_P = 0.01             # a complaint type is on the rating watch list if Mann-Whitney p < 0.01 and its ratings are lower
 HOLIDAYS = {"2026-02-16": "Chinese New Year"}
 
 # Feedback taxonomy v1.1: drafted by the LLM, reviewed and approved by the analyst. text -> (theme, sentiment)
@@ -308,6 +309,48 @@ def trends(t_all, f_all, upto):
     return weekly, monthly, comp
 
 
+# ------------------------------------------------------------------ rating impact
+def rating_impact(f):
+    """For each complaint theme: how much lower are its star ratings than every other comment, and is the
+    gap bigger than chance? Mann-Whitney U (ratings are 1-5 and ordinal; groups are small).
+    lift = how much the overall average rating would rise if these comments were rated like the rest."""
+    from scipy.stats import mannwhitneyu
+    f = f.assign(theme=f.comment_text.map(lambda c: THEMES[c][0]), sentiment=f.comment_text.map(lambda c: THEMES[c][1]))
+    rows = []
+    for th, g in f[f.sentiment == "negative"].groupby("theme"):
+        rest = f[f.theme != th].rating
+        p = float(mannwhitneyu(g.rating, rest).pvalue)
+        rows.append({"theme": th, "n": len(g), "avg_rating": round(g.rating.mean(), 2),
+                     "pct_1_2_stars": round((g.rating <= 2).mean() * 100),
+                     "diff_vs_other_comments": round(g.rating.mean() - rest.mean(), 2), "p_value": round(p, 4),
+                     "avg_lift_if_fixed": round((rest.mean() - g.rating.mean()) * len(g) / len(f), 3),
+                     "safety": th in SAFETY_THEMES})
+    df = pd.DataFrame(rows)
+    df["verdict"] = ["watch closely: lowers ratings" if (r.p_value < WATCH_P and r.diff_vs_other_comments < 0)
+                     else ("ratings unaffected: watch the text" if (r.p_value < WATCH_P and r.diff_vs_other_comments > 0)
+                           else "lower, but not conclusive" if (r.diff_vs_other_comments < 0 and r.p_value < 0.10) else "no clear effect")
+                     for r in df.itertuples()]
+    return df.sort_values("avg_lift_if_fixed", ascending=False).set_index("theme")
+
+
+def impact_chart(df, path, window):
+    d = df.sort_values("diff_vs_other_comments", ascending=False)
+    fig, ax = plt.subplots(figsize=(8.5, 5.2)); style(ax)
+    col = [ORANGE if v.startswith("watch closely") else (BLUE if v.startswith("ratings unaffected") else GREY) for v in d.verdict]
+    ax.barh(d.index, d.diff_vs_other_comments, color=col, height=0.7)
+    ax.axvline(0, color=INK2, lw=1); ax.xaxis.grid(True, color=GRID, lw=0.8); ax.set_xlim(-1.6, 1.9)
+    for y, (th, r) in enumerate(d.iterrows()):
+        x = r.diff_vs_other_comments
+        lab = f"{r.avg_rating:.1f} stars, n={r.n}" + ("  SAFETY" if r.safety else "")
+        ax.text(x + (-0.05 if x < 0 else 0.05), y, lab, va="center", ha="right" if x < 0 else "left", fontsize=7.5,
+                color=RED if r.safety else INK2)
+    ax.set_xlabel(f"Stars compared with all other comments ({window})", color=INK2, fontsize=9)
+    ax.text(0, 1.02, f"Orange = clearly lowers ratings (p < {WATCH_P})   Blue = complaint hidden by high stars   Grey = not conclusive",
+            transform=ax.transAxes, ha="left", fontsize=7.5, color=INK2)
+    ax.set_title("Which complaints pull the star rating down", loc="left", color=INK, fontsize=12, fontweight="bold", pad=20)
+    fig.tight_layout(); fig.savefig(path, dpi=200); plt.close(fig)
+
+
 # ------------------------------------------------------------------ full-dataset summary
 def dataset_summary(t, f, s):
     """Figures for the WHOLE file (the quarter), kept separate from the weekly figures so that a
@@ -341,6 +384,14 @@ def dataset_summary(t, f, s):
                   "weeks_evening_18": int((cons.busiest_evening_hour == 18).sum()),
                   "share_in_peaks_pct": round(float(cons.share_of_trips_in_peaks.mean() * 100), 1)},
     }
+    imp = rating_impact(f[["feedback_id", "date", "comment_text", "rating"]] if "theme" in f else f)
+    imp.to_csv(out / "rating_impact.csv")
+    facts["rating_impact"] = {"overall_avg_rating": round(float(f.rating.mean()), 2),
+                              "watch_closely": imp[imp.verdict.str.startswith("watch closely")][["n", "avg_rating", "diff_vs_other_comments", "p_value", "avg_lift_if_fixed"]].to_dict("index"),
+                              "hidden_by_high_stars": imp[imp.verdict.str.startswith("ratings unaffected")][["n", "avg_rating", "diff_vs_other_comments"]].to_dict("index"),
+                              "not_conclusive": imp[imp.verdict.str.startswith("lower, but")][["n", "avg_rating", "p_value"]].to_dict("index"),
+                              "no_clear_effect": imp[imp.verdict == "no clear effect"][["n", "avg_rating", "p_value"]].to_dict("index")}
+    impact_chart(imp, out / "chart_rating_impact.png", f"{facts['window']['from']} to {facts['window']['to']}")
     (out / "facts_dataset.json").write_text(json.dumps(facts, indent=2, default=str))
     # complaint chart for the whole file
     th = (neg.groupby("theme").agg(n=("feedback_id", "size"), avg_rating=("rating", "mean")).sort_values("n"))
@@ -411,6 +462,7 @@ def main(week_start=None):
                 .sort_values("n", ascending=False).round(2))
     themes_q.to_csv(OUT / "feedback_themes_to_week_end.csv")
 
+    imp = rating_impact(f_all[f_all.date < we]); imp.to_csv(OUT / "rating_impact_to_week_end.csv")
     weekly, monthly, comp = trends(t_all, f_all, we)
     weekly.to_csv(OUT / "trend_weekly_trips.csv"); monthly.to_csv(OUT / "trend_monthly.csv")
     comp.to_csv(OUT / "trend_complaints_by_month.csv")
@@ -466,10 +518,15 @@ def main(week_start=None):
                              "rating_text_disagree": int(f_upto.needs_review.sum()),
                              "top_issues": themes_q.head(5).reset_index()[["theme", "n", "avg_rating"]].to_dict("records")},
         "trend": {"monthly": monthly.to_dict("index"), "complaints_by_month": comp.to_dict("index")},
+        "rating_watch_to_week_end": {"watch_closely": imp[imp.verdict.str.startswith("watch closely")].avg_rating.to_dict(),
+                                     "hidden_by_high_stars": imp[imp.verdict.str.startswith("ratings unaffected")].avg_rating.to_dict(),
+                                     "this_week_counts": {th: int(n) for th, n in neg.theme.value_counts().items()
+                                                          if th in set(imp[imp.verdict.str.startswith("watch closely")].index)}},
     }
     (OUT / "facts.json").write_text(json.dumps(facts, indent=2, default=str))
     dataset_summary(t_all, f_all, s)
     charts(prof, we_prof, thr, flows, plan, curve, themes_q, weekly)
+    impact_chart(imp, OUT / "chart7_rating_impact.png", f"1 Jan to {(we - pd.Timedelta(days=1)).date()}")
     print(json.dumps(facts, indent=2, default=str))
 
 

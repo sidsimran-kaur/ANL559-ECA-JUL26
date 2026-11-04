@@ -68,6 +68,18 @@ PASS               3,
 PASS               2,
 PASS               2,
 PASS               2.
+PASS               1
+PASS               29
+PASS               2.38
+PASS               2.52
+PASS               2.55
+PASS               2.61
+PASS               2.65
+PASS               3
+PASS               2
+PASS               1
+PASS               4.19
+PASS               4.5
 PASS               26
 PASS               20
 PASS               6
@@ -75,6 +87,6 @@ PASS               6.
 PASS               10
 PASS               14
 
-75/75 numbers traced to facts.json
+87/87 numbers traced to facts.json
 35/35 station-number pairs match facts.json
 All numbers traced -> ready for human review
