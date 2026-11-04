@@ -1,4 +1,4 @@
-Checking ANL559_ECA_1a_1b_v6.docx (claims: report_claims.json, week 2026-03-23)
+Checking ANL559_ECA_1a_1b_v7.docx (claims: report_claims.json, week 2026-03-23)
 
 A. Write-up numbers vs independent recalculation
   ok           6,500  vs data.trips = 6500   "6,500 trips, 20 stations and 300 comments"
