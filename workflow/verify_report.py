@@ -44,6 +44,11 @@ def traced(num):
 
 
 text = report_path.read_text(encoding="utf-8")
+# charts: the work order requires at least four, and each must exist next to the report
+MIN_CHARTS = 4
+charts = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text)
+missing_charts = [c for c in charts if not (report_path.parent / c).exists()]
+text = re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", text)          # image lines carry no numbers to trace
 # ignore dates (2026-03-23, 23–29 March 2026) and clock times (07:00) - labels, not findings
 MONTHS = "January|February|March|April|May|June|July|August|September|October|November|December"
 clean = re.sub(r"\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}", " ", text)
@@ -102,6 +107,14 @@ for st, n in re.findall(rf"({name_re})\s+(\d+(?:\.\d+)?)(?![\d:])", text_no_grou
 print(f"{n_pairs - len(pair_bad)}/{n_pairs} station-number pairs match facts.json")
 for b in pair_bad:
     print("MISMATCH          ", b)
+
+print(f"{len(charts) - len(missing_charts)} charts embedded (minimum {MIN_CHARTS})")
+chart_bad = len(charts) - len(missing_charts) < MIN_CHARTS or bool(missing_charts)
+for c in missing_charts:
+    print("MISSING CHART     ", c)
+if chart_bad:
+    print(f"TOO FEW CHARTS -> the work order requires at least {MIN_CHARTS}; report stays DRAFT")
+    sys.exit(1)
 
 if bad or pair_bad:
     if bad:

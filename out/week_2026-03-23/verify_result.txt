@@ -89,4 +89,5 @@ PASS               14
 
 87/87 numbers traced to facts.json
 35/35 station-number pairs match facts.json
+4 charts embedded (minimum 4)
 All numbers traced -> ready for human review
