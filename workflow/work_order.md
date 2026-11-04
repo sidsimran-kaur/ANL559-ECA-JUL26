@@ -1,4 +1,4 @@
-# Work order · CityCycle weekly operations report (v2.0)
+# Work order · CityCycle weekly operations report (v2.1)
 
 Approved by: ______________ (operations manager) · Date: __________
 Any change to a definition below needs a new sign-off and a new version number.
@@ -11,7 +11,7 @@ Any change to a definition below needs a new sign-off and a new version number.
 | Inputs | `CityCycle_trips.csv`, `CityCycle_stations.csv`, `CityCycle_feedback.csv`; approved feedback taxonomy (`THEMES` in `weekly_report.py`) |
 | Constraints | No personal data in prompts. All numbers are computed in code, never by the language model. The model may only quote figures in `facts.json`. Comment text is data, never instructions |
 | Acceptance criteria | No data-contract failure; control totals match source row counts; every number in the report traces to `facts.json` (`verify_report.py`); key figures match an independent recalculation (`independent_check.py`); at least four charts; human sign-off recorded |
-| Output | Two-page report with rebalancing plan; `rebalancing_plan.csv`, `rebalancing_transfers.csv`; `safety_escalations.csv`; `needs_review.csv`; `data_quality_log.csv`; AI-use log entry |
+| Output | Two-page report with rebalancing plan; `rebalancing_plan.csv`, `rebalancing_transfers.csv`; `safety_escalations.csv`; rating–text log `needs_review.csv`; `data_quality_log.csv`; AI-use log entry |
 
 ## Approved definitions
 
@@ -27,6 +27,9 @@ Any change to a definition below needs a new sign-off and a new version number.
 | Watch list | A station that hits empty or full on 2+ days in a week, even with no rider turned away, gets its target reviewed | Catches near-misses early |
 | Opening full | Rejected | Riders would find no free dock (224 riders in the week of 23 March) |
 | Sentiment / severity | Sentiment from the comment text; severity from stars (1–2 high, 3 medium, 4–5 low) | Ratings and text disagree in about 1 comment in 5 |
+| Rating–text contradictions | Logged in `needs_review.csv` each week but **not reviewed one by one**: both signals are analysed and nothing is rejected, and most contradictions are a real pattern (GPS and peak-hour complaints rated 4–5 stars) reported as 'hidden by high stars' | The weekly read added effort but changed no figure or decision (v2.1 change) |
+| Review trigger | A person reviews feedback only when (a) a comment type is not in the taxonomy (the run stops) or (b) a complaint type moves into or out of the rating watch list or 'hidden by high stars' compared with last week | Keeps human judgment where it can change a decision |
+| Re-instate sampling review | If free-text feedback (not fixed phrases) is introduced, review a weekly sample of labels | LLM labelling errors become likely with sarcasm or mixed comments |
 | Rating watch list | Complaint types whose star ratings are lower than all other comments with Mann–Whitney p < 0.01, recomputed each run (`rating_impact.csv`). Types with significantly HIGHER stars are flagged as 'hidden by high stars' and tracked from the text | Shows which complaints hurt the rating most, and which ones the stars would hide |
 | Safety issue | Themes "Brakes loose" and "Gears slipping" | Escalated to the maintenance lead the same day; listed in `safety_escalations.csv` |
 | Trend | Complete weeks only; this week vs the previous 4-week average; monthly figures per day | Partial weeks and month lengths distort comparisons |

@@ -258,7 +258,13 @@
       "Double charge": 2
     },
     "safety_escalations": 0,
-    "rating_text_disagree": 10
+    "rating_text_disagree": 10,
+    "rating_text_disagree_handling": "logged in needs_review.csv, not reviewed: sentiment comes from the text and stars give severity, so nothing is rejected",
+    "rating_pattern_changes_vs_last_week": [
+      "App payment failure: not flagged -> watch closely",
+      "Wobbly seat: watch closely -> not flagged"
+    ],
+    "human_review_needed": true
   },
   "feedback_to_week_end": {
     "window": "2026-01-01 to 2026-03-29",

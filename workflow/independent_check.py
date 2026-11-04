@@ -37,6 +37,25 @@ upto = [r for r in all_trips if P(r["start_time"]) < we and P(r["start_time"]).w
 busiest_am = Counter(P(r["start_time"]).hour for r in upto if P(r["start_time"]).hour < 12).most_common(1)[0][0]
 busiest_pm = Counter(P(r["start_time"]).hour for r in upto if P(r["start_time"]).hour >= 15).most_common(1)[0][0]
 
+sys.path.insert(0, str(Path(__file__).parent))
+from truth import mann_whitney_p, THEME_OF  # noqa: E402  (csv-only implementation, not the pipeline's scipy)
+
+
+def flagged(rows):
+    out = {}
+    for text, theme in THEME_OF.items():
+        mine = [int(r["rating"]) for r in rows if r["comment_text"] == text]
+        rest = [int(r["rating"]) for r in rows if r["comment_text"] != text]
+        if mine and round(mann_whitney_p(mine, rest), 4) < 0.01:
+            out[theme] = "watch closely" if sum(mine) / len(mine) < sum(rest) / len(rest) else "ratings unaffected"
+    return out
+
+
+now_f = flagged([r for r in all_fb if datetime.fromisoformat(r["date"]) < we])
+prev_f = flagged([r for r in all_fb if datetime.fromisoformat(r["date"]) < ws])
+changes = sorted(f"{t}: {prev_f.get(t, 'not flagged')} -> {now_f.get(t, 'not flagged')}"
+                 for t in set(now_f) | set(prev_f) if now_f.get(t) != prev_f.get(t))
+
 neg_words = ("crash", "failed", "wrong", "no bikes", "hard to find", "full", "loose", "flat", "wobbly",
              "slipping", "twice", "late fee")
 reb = facts["rebalancing"]
@@ -55,6 +74,8 @@ checks = [
     ("Safety comments to date (brakes + gears)",
      sum(r["comment_text"] in ("brakes felt loose", "gears slipping") for r in fb_to_date),
      facts["feedback_to_week_end"]["safety_mentions"]),
+    ("Rating-pattern changes vs last week (count)", len(changes), len(facts["feedback_week"]["rating_pattern_changes_vs_last_week"])),
+    ("Rating-pattern changes identical (1 = yes)", int(changes == facts["feedback_week"]["rating_pattern_changes_vs_last_week"]), 1),
     ("Plan balances: delivered = collected", sum(reb["weekday_deliver"].values()), sum(reb["weekday_collect"].values())),
 ]
 ok = True

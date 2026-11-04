@@ -1,4 +1,4 @@
-Checking ANL559_ECA_1a_1b_v8.docx (claims: report_claims.json, week 2026-03-23)
+Checking ANL559_ECA_1a_1b_v9.docx (claims: report_claims.json, week 2026-03-23)
 
 A. Write-up numbers vs independent recalculation
   ok           6,500  vs data.trips = 6500   "6,500 trips, 20 stations and 300 comments"
@@ -38,8 +38,8 @@ A. Write-up numbers vs independent recalculation
   ok             8.1  vs week.vs_prior_4wk_pct = -8.1   "8.1% below the four-week average"
   ok             468  vs week.range_min = 468   "normal range of 468 to 545"
   ok             545  vs week.range_max = 545   "normal range of 468 to 545"
-  ok              11  vs proc.independent_checks = 11   "All 11 independent checks matched"
-  ok              11  vs proc.independent_matched = 11   "All 11 independent checks matched"
+  ok              13  vs proc.independent_checks = 13   "All 13 independent checks matched"
+  ok              13  vs proc.independent_matched = 13   "All 13 independent checks matched"
   ok             486  vs week.trips = 486   "including 486 trips"
   ok             2.8  vs week.morning_loss_tanjong_pagar = 2.8   "morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Pl"
   ok             2.6  vs week.morning_loss_raffles_place = 2.6   "morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Pl"
@@ -53,10 +53,10 @@ A. Write-up numbers vs independent recalculation
   ok              21  vs week.comments = 21   "loaded 486 trips and 21 comments"
   ok            four  vs week.warnings = 4   "four warnings"
   ok              15  vs reb.weekday_bikes_per_night = 15   "overnight rebalancing of 15 bikes per weekday night"
-  ok              21  vs week.comments = 21   "Of 21 comments, 14 were negative, 10 went for review and non"
-  ok              14  vs week.negative = 14   "Of 21 comments, 14 were negative, 10 went for review and non"
-  ok              10  vs week.rating_text_disagree = 10   "Of 21 comments, 14 were negative, 10 went for review and non"
-  ok            none  vs week.safety = 0   "Of 21 comments, 14 were negative, 10 went for review and non"
+  ok              21  vs week.comments = 21   "Of 21 comments, 14 were negative, 10 had ratings that contra"
+  ok              14  vs week.negative = 14   "Of 21 comments, 14 were negative, 10 had ratings that contra"
+  ok              10  vs week.rating_text_disagree = 10   "Of 21 comments, 14 were negative, 10 had ratings that contra"
+  ok            none  vs week.safety = 0   "Of 21 comments, 14 were negative, 10 had ratings that contra"
   ok              87  vs proc.numbers_traced = 87   "All 87 numbers traced"
   ok              45  vs proc.planted_value = 45   "a planted error (45 trips instead of 42)"
   ok              42  vs proc.planted_true = 42   "a planted error (45 trips instead of 42)"

@@ -38,13 +38,13 @@ Changi Business Park 42 trips, Tanjong Pagar 39, Marina Bay 39, Raffles Place 35
 
 ## 5. What riders are saying
 
-21 comments: 14 negative and 7 positive by their text, average rating 4.0. Top issues: App GPS shows the wrong station 4, no bikes in the morning 3, wobbly seat 2, hard to find a bike at peak hour 2, double charge 2. **Rating watch list** (complaint types that clearly lower star ratings, 1 January to 29 March): app crashes on unlock 2.38 stars, double charges 2.52, loose brakes 2.55, app payment failures 2.61 and morning shortages 2.65. This week brought 3 morning-shortage, 2 double-charge and 1 payment-failure complaints. GPS errors (4.19 stars) and peak-hour shortages (4.5) barely affect ratings, so they are tracked from the text. **Safety:** no brake or gear complaints this week; 26 so far this quarter (20 brakes, 6 gears), each escalated to maintenance on the day it arrived.
+21 comments: 14 negative and 7 positive by their text, average rating 4.0. Top issues: App GPS shows the wrong station 4, no bikes in the morning 3, wobbly seat 2, hard to find a bike at peak hour 2, double charge 2. **Rating watch list** (complaint types that clearly lower star ratings, 1 January to 29 March): app crashes on unlock 2.38 stars, double charges 2.52, loose brakes 2.55, app payment failures 2.61 and morning shortages 2.65. This week brought 3 morning-shortage, 2 double-charge and 1 payment-failure complaints. GPS errors (4.19 stars) and peak-hour shortages (4.5) barely affect ratings, so they are tracked from the text. **Review trigger:** the rating pattern changed this week, because app payment failures joined the rating watch list and wobbly seats left it, so the analyst reviews these two complaint types before sign-off. **Safety:** no brake or gear complaints this week; 26 so far this quarter (20 brakes, 6 gears), each escalated to maintenance on the day it arrived.
 
 ![Star rating of each complaint type compared with all other comments](chart7_rating_impact.png)
 
 ## 6. Data caveats
 
-- 10 comments have a star rating that contradicts the text; they are in needs_review.csv, and this report goes by the text.
+- 10 comments have a star rating that contradicts their text. They are logged in needs_review.csv but not reviewed one by one, because sentiment comes from the text and stars give severity, so nothing is rejected.
 - The station region field doesn't match location for 14 stations, so no regional breakdown is given.
 - Distance is approximate, so transfers are paired by size, not by route; the ops team plans the route.
 - Rebalancing moves are not recorded in the data; the plan assumes each station is reset to its target overnight.
