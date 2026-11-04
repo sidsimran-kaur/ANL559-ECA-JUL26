@@ -1,0 +1,73 @@
+Checking ANL559_ECA_1a_1b_v4.docx (claims: report_claims.json, week 2026-03-23)
+
+A. Write-up numbers vs independent recalculation
+  ok           6,500  vs data.trips = 6500   "6,500 trips, 20 stations and 300 comments"
+  ok              20  vs data.stations = 20   "6,500 trips, 20 stations and 300 comments"
+  ok             300  vs data.comments = 300   "6,500 trips, 20 stations and 300 comments"
+  ok              14  vs data.overlap_pairs = 14   "14 pairs of trips place one bike on two journeys at once"
+  ok              13  vs data.overlap_pairs_different_start = 13   "In 13 pairs the trips start at different stations"
+  ok              14  vs data.region_mismatch = 14   "14 of 20 station regions do not match"
+  ok              20  vs data.stations = 20   "14 of 20 station regions do not match"
+  ok             1.4  vs data.distance_std_km = 1.4   "distance varies by about 1.4 km"
+  ok              63  vs data.rating_text_disagree = 63   "63 ratings contradict their comment"
+  ok     08:00–10:00  vs data.peak_windows = ['08:00–10:00', '12:00–13:00', '17:00–20:00']   "This gives 08:00–10:00, 12:00–13:00 and 17:00–20:00"
+  ok     12:00–13:00  vs data.peak_windows = ['08:00–10:00', '12:00–13:00', '17:00–20:00']   "This gives 08:00–10:00, 12:00–13:00 and 17:00–20:00"
+  ok     17:00–20:00  vs data.peak_windows = ['08:00–10:00', '12:00–13:00', '17:00–20:00']   "This gives 08:00–10:00, 12:00–13:00 and 17:00–20:00"
+  ok            71.8  vs data.share_in_peaks_pct = 71.8   "carrying 71.8% of weekday trips"
+  ok           08:00  vs data.busiest_morning_hour = 08:00   "08:00 was the busiest morning hour in 10 of 12 complete week"
+  ok              10  vs data.weeks_busiest_08 = 10   "08:00 was the busiest morning hour in 10 of 12 complete week"
+  ok              12  vs data.complete_weeks = 12   "08:00 was the busiest morning hour in 10 of 12 complete week"
+  ok           18:00  vs data.busiest_evening_hour = 18:00   "18:00 the busiest evening hour in 11"
+  ok              11  vs data.weeks_busiest_18 = 11   "18:00 the busiest evening hour in 11"
+  ok              no  vs reb.overnight_turned_away = 0   "overnight rebalancing turned away no riders"
+  ok              22  vs reb.overnight_bikes_per_day = 22.0   "raised bikes moved from 22 to 30 a day"
+  ok              30  vs reb.midday_bikes_per_day = 30.0   "raised bikes moved from 22 to 30 a day"
+  ok             224  vs reb.full_turned_away = 224   "would have left 224 riders without a dock"
+  ok           eight  vs reb.backtest_weeks = 8   "turned away no riders in all eight weeks"
+  ok           eight  vs reb.backtest_weeks_zero_turned_away = 8   "turned away no riders in all eight weeks"
+  ok              15  vs reb.weekday_bikes_per_night = 15   "The plan moves 15 bikes each weekday night"
+  ok            once  vs reb.raffles_close_call_days = 1   "Raffles Place reached empty once"
+  FAIL  phrase not found (sentence edited? update report_claims.json): "218 comments are negative and 82 positive"
+  FAIL  phrase not found (sentence edited? update report_claims.json): "GPS errors and morning shortages lead with 27 each"
+  ok              20  vs data.brakes = 20   "Brake (20) and gear (6) complaints"
+  ok               6  vs data.gears = 6   "Brake (20) and gear (6) complaints"
+  FAIL  phrase not found (sentence edited? update report_claims.json): "Trips rose from 70.9 to 74.4 a day"
+  ok             8.1  vs week.vs_prior_4wk_pct = -8.1   "8.1% below the four-week average"
+  ok             468  vs week.range_min = 468   "normal range of 468 to 545"
+  ok             545  vs week.range_max = 545   "normal range of 468 to 545"
+  ok              11  vs proc.independent_checks = 11   "All 11 independent checks matched"
+  ok              11  vs proc.independent_matched = 11   "All 11 independent checks matched"
+  ok             486  vs week.trips = 486   "including 486 trips"
+  ok             2.8  vs week.morning_loss_tanjong_pagar = 2.8   "morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Pl"
+  ok             2.6  vs week.morning_loss_raffles_place = 2.6   "morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Pl"
+  ok           08:00  vs data.busiest_morning_hour = 08:00   "peaks at 08:00 and 18:00"
+  ok           18:00  vs data.busiest_evening_hour = 18:00   "peaks at 08:00 and 18:00"
+  ok              26  vs to_week_end.safety = 26   "26 safety comments"
+  ok              26  vs data.safety = 26   "26 safety comments"
+  ok              15  vs reb.weekday_bikes_per_night = 15   "15 bikes delivered and collected"
+  ok              15  vs reb.weekday_collected = 15   "15 bikes delivered and collected"
+  ok             486  vs week.trips = 486   "loaded 486 trips and 21 comments"
+  ok              21  vs week.comments = 21   "loaded 486 trips and 21 comments"
+  ok            four  vs week.warnings = 4   "four warnings"
+  ok              15  vs reb.weekday_bikes_per_night = 15   "overnight rebalancing of 15 bikes per weekday night"
+  ok              21  vs week.comments = 21   "Of 21 comments, 14 were negative, 10 went for review and non"
+  ok              14  vs week.negative = 14   "Of 21 comments, 14 were negative, 10 went for review and non"
+  ok              10  vs week.rating_text_disagree = 10   "Of 21 comments, 14 were negative, 10 went for review and non"
+  ok            none  vs week.safety = 0   "Of 21 comments, 14 were negative, 10 went for review and non"
+  ok              75  vs proc.numbers_traced = 75   "All 75 numbers traced"
+  ok              45  vs proc.planted_value = 45   "a planted error (45 trips instead of 42)"
+  ok              42  vs proc.planted_true = 42   "a planted error (45 trips instead of 42)"
+
+B. Every number in 1a/1b is registered
+  FAIL  unregistered number '214': ...ost bikes Feedback and safety. By text, 214 comments to date are negative and 82 po...
+  FAIL  unregistered number '82': ..., 214 comments to date are negative and 82 positive; GPS errors (27) and morning s...
+  FAIL  unregistered number '27': ...e negative and 82 positive; GPS errors (27) and morning shortages (26) lead. Brake...
+  FAIL  unregistered number '26': ... GPS errors (27) and morning shortages (26) lead. Brake (20) and gear (6) complain...
+  FAIL  unregistered number '70.9': ...ty themes in red Trend. Trips rose from 70.9 to 74.3 a day between January and March...
+  FAIL  unregistered number '74.3': ...s in red Trend. Trips rose from 70.9 to 74.3 a day between January and March, led by...
+
+C. Weekly report for week 2026-03-23
+  ok    verify_report.py: All numbers traced -> ready for human review
+  ok    independent_check.py: Plan balances: delivered = collected                15        15  MATCH
+
+RESULT: FAIL - 9 problem(s); fix before submitting

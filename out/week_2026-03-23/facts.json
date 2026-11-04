@@ -149,10 +149,9 @@
       "Clarke Quay": 1
     },
     "weekday_collect": {
-      "Ang Mo Kio": 1,
       "Sentosa": 1,
       "HarbourFront": 1,
-      "Buona Vista": 1,
+      "Ang Mo Kio": 2,
       "Bishan": 2,
       "Bugis": 2,
       "Paya Lebar": 2,
@@ -160,7 +159,7 @@
       "Serangoon": 3
     },
     "weekday_bikes_to_move_per_night": 15,
-    "weekend_bikes_to_move_per_night": 11,
+    "weekend_bikes_to_move_per_night": 12,
     "targets_next_week": {
       "Raffles Place": 8,
       "Changi Business Park": 18,
@@ -169,14 +168,14 @@
       "Jurong East": 6,
       "one-north": 12,
       "Clarke Quay": 16,
-      "Pasir Ris": 8,
+      "Buona Vista": 15,
       "Woodlands": 12,
       "Tampines Hub": 8,
       "Orchard": 7,
-      "Ang Mo Kio": 10,
+      "Pasir Ris": 8,
       "Sentosa": 14,
       "HarbourFront": 14,
-      "Buona Vista": 15,
+      "Ang Mo Kio": 10,
       "Bishan": 14,
       "Bugis": 12,
       "Paya Lebar": 8,
@@ -191,17 +190,17 @@
         "bikes": 3
       },
       {
-        "from": "Somerset",
+        "from": "Bishan",
         "to": "Raffles Place",
         "bikes": 1
       },
       {
-        "from": "Bishan",
+        "from": "Bugis",
         "to": "Changi Business Park",
         "bikes": 2
       },
       {
-        "from": "Bugis",
+        "from": "Ang Mo Kio",
         "to": "Changi Business Park",
         "bikes": 1
       },
@@ -216,7 +215,7 @@
         "bikes": 1
       },
       {
-        "from": "Bugis",
+        "from": "Bishan",
         "to": "Tanjong Pagar",
         "bikes": 1
       },
@@ -226,7 +225,7 @@
         "bikes": 1
       },
       {
-        "from": "Buona Vista",
+        "from": "Somerset",
         "to": "Jurong East",
         "bikes": 1
       },
@@ -261,7 +260,8 @@
     "safety_escalations": 0,
     "rating_text_disagree": 10
   },
-  "feedback_to_date": {
+  "feedback_to_week_end": {
+    "window": "2026-01-01 to 2026-03-29",
     "total": 296,
     "negative": 214,
     "positive": 82,

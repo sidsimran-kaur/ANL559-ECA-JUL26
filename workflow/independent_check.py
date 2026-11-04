@@ -54,7 +54,7 @@ checks = [
      facts["feedback_week"]["negative"]),
     ("Safety comments to date (brakes + gears)",
      sum(r["comment_text"] in ("brakes felt loose", "gears slipping") for r in fb_to_date),
-     facts["feedback_to_date"]["safety_mentions"]),
+     facts["feedback_to_week_end"]["safety_mentions"]),
     ("Plan balances: delivered = collected", sum(reb["weekday_deliver"].values()), sum(reb["weekday_collect"].values())),
 ]
 ok = True

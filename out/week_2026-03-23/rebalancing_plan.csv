@@ -1,21 +1,21 @@
-station,capacity,open_min,open_max,target,weekday_night_move,weekend_night_move
-Raffles Place,15,5.0,12.0,8,4,-1
-Changi Business Park,30,8.0,28.0,18,3,2
-Marina Bay,20,7.0,17.0,12,3,-2
-Tanjong Pagar,15,5.0,13.0,9,2,0
-Jurong East,15,2.0,11.0,6,1,1
-one-north,20,6.0,18.0,12,1,0
-Clarke Quay,30,6.0,27.0,16,1,0
-Pasir Ris,15,4.0,12.0,8,0,3
-Woodlands,25,3.0,20.0,12,0,1
-Tampines Hub,15,4.0,11.0,8,0,0
-Orchard,15,3.0,11.0,7,0,-1
-Ang Mo Kio,20,3.0,16.0,10,-1,2
-Sentosa,30,3.0,26.0,14,-1,-2
-HarbourFront,30,4.0,25.0,14,-1,-2
-Buona Vista,30,3.0,27.0,15,-1,-1
-Bishan,30,3.0,24.0,14,-2,0
-Bugis,25,2.0,21.0,12,-2,-1
-Paya Lebar,20,2.0,15.0,8,-2,-1
-Somerset,25,2.0,21.0,12,-2,0
-Serangoon,25,2.0,20.0,11,-3,2
+station,capacity,open_min,open_max,target,weekday_night_move,weekend_night_move,backtest_target
+Raffles Place,15,5.0,12.0,8,4,-1,8
+Changi Business Park,30,8.0,28.0,18,3,2,18
+Marina Bay,20,7.0,17.0,12,3,-2,12
+Tanjong Pagar,15,5.0,13.0,9,2,0,10
+Jurong East,15,2.0,11.0,6,1,1,6
+one-north,20,6.0,18.0,12,1,0,12
+Clarke Quay,30,6.0,27.0,16,1,0,17
+Buona Vista,30,3.0,27.0,15,0,-2,14
+Woodlands,25,3.0,20.0,12,0,1,12
+Tampines Hub,15,4.0,11.0,8,0,1,8
+Orchard,15,3.0,11.0,7,0,-1,6
+Pasir Ris,15,4.0,12.0,8,0,3,8
+Sentosa,30,3.0,26.0,14,-1,-2,14
+HarbourFront,30,4.0,25.0,14,-1,-2,15
+Ang Mo Kio,20,3.0,16.0,10,-2,2,10
+Bishan,30,3.0,24.0,14,-2,0,14
+Bugis,25,2.0,21.0,12,-2,-1,12
+Paya Lebar,20,2.0,15.0,8,-2,-1,8
+Somerset,25,2.0,21.0,12,-2,0,12
+Serangoon,25,2.0,20.0,11,-3,2,12

@@ -20,7 +20,7 @@ Net bikes lost per weekday in the morning peak: Tanjong Pagar 2.8, Raffles Place
 
 **Recommendation:** rebalance overnight only. A midday run moves more bikes and turns away no fewer riders.
 
-Each weekday night, deliver to Raffles Place 4, Changi Business Park 3, Marina Bay 3, Tanjong Pagar 2, and Jurong East, one-north and Clarke Quay 1 each (15 bikes). Collect from Serangoon 3; Bishan, Bugis, Paya Lebar and Somerset 2 each; Ang Mo Kio, Sentosa, HarbourFront and Buona Vista 1 each. Suggested pairings: Serangoon → Raffles Place 3; Bishan → Changi Business Park 2; Paya Lebar → Marina Bay 2; the rest 1 bike each (see rebalancing_transfers.csv). Weekend nights need 11 bikes moved.
+Each weekday night, deliver to Raffles Place 4, Changi Business Park 3, Marina Bay 3, Tanjong Pagar 2, and Jurong East, one-north and Clarke Quay 1 each (15 bikes). Collect from Serangoon 3; Ang Mo Kio, Bishan, Bugis, Paya Lebar and Somerset 2 each; Sentosa and HarbourFront 1 each. Suggested pairings: Serangoon → Raffles Place 3; Bugis → Changi Business Park 2; Paya Lebar → Marina Bay 2; the rest 1 bike each (see rebalancing_transfers.csv). Weekend nights need 11 bikes moved.
 
 **Opening targets for next week:** Raffles Place 8, Tanjong Pagar 9, Marina Bay 12, one-north 12, Clarke Quay 16, Changi Business Park 18 (all 20 stations in rebalancing_plan.csv).
 

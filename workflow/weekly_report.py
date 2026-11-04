@@ -227,12 +227,21 @@ def simulate(t, cap, start, midday=None):
 
 
 def balanced_round(x):
-    """Round average moves to whole bikes so deliveries equal collections (bikes are conserved)."""
+    """Round average moves to whole bikes so deliveries equal collections (bikes are conserved).
+    Approved tie-break rule (work_order.md): adjust the station rounded furthest in the wrong direction;
+    on a tie, prefer collecting one more bike over delivering one fewer (never short a station that
+    needs bikes), then alphabetical order."""
     r = x.round()
     gap = int(r.sum())                       # >0: too many deliveries; <0: too many collections
-    err = (r - x).sort_values(ascending=(gap < 0))
-    for st in err.index[:abs(gap)]:
-        r[st] -= 1 if gap > 0 else -1
+    if gap == 0:
+        return r.astype(int)
+    err = (r - x).round(6)
+    if gap > 0:      # reduce someone by 1: biggest round-up first; prefer collect side (x <= 0)
+        order = sorted(x.index, key=lambda st: (-err[st], 0 if x[st] <= 0 else 1, st))
+    else:            # increase someone by 1: biggest round-down first; prefer delivery side (x >= 0)
+        order = sorted(x.index, key=lambda st: (err[st], 0 if x[st] >= 0 else 1, st))
+    for st in order[:abs(gap)]:
+        r[st] += -1 if gap > 0 else 1
     return r.astype(int)
 
 
@@ -277,6 +286,7 @@ def rebalancing(t_week, history, cap):
     plan["weekday_night_move"] = balanced_round(ends[ends.weekday].groupby("station").move.mean().reindex(plan.index).fillna(0))
     plan["weekend_night_move"] = balanced_round(ends[~ends.weekday].groupby("station").move.mean().reindex(plan.index).fillna(0))
     plan = plan.sort_values("weekday_night_move", ascending=False)
+    plan["backtest_target"] = targets_bt.target.reindex(plan.index)
     return plan, transfers(plan.weekday_night_move), tests, midday_needed, curve
 
 
@@ -296,6 +306,56 @@ def trends(t_all, f_all, upto):
     neg = f[f.comment_text.map(lambda c: THEMES[c][1]) == "negative"]
     comp = pd.crosstab(neg.date.dt.to_period("M").astype(str), neg.category)
     return weekly, monthly, comp
+
+
+# ------------------------------------------------------------------ full-dataset summary
+def dataset_summary(t, f, s):
+    """Figures for the WHOLE file (the quarter), kept separate from the weekly figures so that a
+    quarter statement can never quietly use a to-the-end-of-the-week number."""
+    out = ROOT / "out" / "dataset_summary"; out.mkdir(parents=True, exist_ok=True)
+    f = f.assign(theme=f.comment_text.map(lambda c: THEMES[c][0]), sentiment=f.comment_text.map(lambda c: THEMES[c][1]))
+    neg = f[f.sentiment == "negative"]
+    disagree = ((f.sentiment == "negative") & (f.rating >= 4)) | ((f.sentiment == "positive") & (f.rating <= 2))
+    ts = t.sort_values(["bike_id", "start_time"]).reset_index(drop=True)
+    first = ts.index[ts.groupby("bike_id").start_time.shift(-1) < ts.end_time]
+    diff_start = int((ts.loc[first, "start_station"].values != ts.loc[first + 1, "start_station"].values).sum())
+    sd = t[t.start_station != t.end_station].groupby(["start_station", "end_station"]).distance_km.std()
+    m = t.start_time.dt.to_period("M"); days = t.groupby(m).start_time.apply(lambda x: x.dt.normalize().nunique())
+    prof, we_prof, thr, windows = detect_peaks(t)
+    cons = peak_consistency(t, complete_weeks(t))
+    themes = neg.theme.value_counts()
+    facts = {
+        "window": {"from": str(t.start_time.min().date()), "to": str(t.start_time.max().date())},
+        "rows": {"trips": len(t), "stations": len(s), "comments": len(f)},
+        "trips_per_day_by_month": (t.groupby(m).size() / days).round(1).rename(index=str).to_dict(),
+        "feedback": {"negative": len(neg), "positive": int((f.sentiment == "positive").sum()),
+                     "themes": themes.to_dict(), "brakes": int(themes.get("Brakes loose", 0)),
+                     "gears": int(themes.get("Gears slipping", 0)),
+                     "safety": int(neg.theme.isin(SAFETY_THEMES).sum()), "rating_text_disagree": int(disagree.sum())},
+        "data_quality": {"overlap_pairs": len(first), "overlap_trips": 2 * len(first), "overlap_pairs_different_start": diff_start,
+                         "region_mismatch": int((s.station.map(URA_REGION) != s.region).sum()),
+                         "distance_std_median_km": round(float(sd.median()), 2),
+                         "round_trips": int((t.start_station == t.end_station).sum())},
+        "peaks": {"windows": [fmt_window(a, b) for a, b in windows], "complete_weeks": len(cons),
+                  "weeks_morning_08": int((cons.busiest_morning_hour == 8).sum()),
+                  "weeks_evening_18": int((cons.busiest_evening_hour == 18).sum()),
+                  "share_in_peaks_pct": round(float(cons.share_of_trips_in_peaks.mean() * 100), 1)},
+    }
+    (out / "facts_dataset.json").write_text(json.dumps(facts, indent=2, default=str))
+    # complaint chart for the whole file
+    th = (neg.groupby("theme").agg(n=("feedback_id", "size"), avg_rating=("rating", "mean")).sort_values("n"))
+    plt.rcParams.update({"font.family": "DejaVu Sans", "figure.facecolor": SURF})
+    fig, ax = plt.subplots(figsize=(8, 5)); style(ax)
+    ax.barh(th.index, th.n, color=[RED if i in SAFETY_THEMES else BLUE for i in th.index], height=0.7)
+    ax.xaxis.grid(True, color=GRID, lw=0.8)
+    for y, (name, n, r) in enumerate(zip(th.index, th.n, th.avg_rating)):
+        safe = name in SAFETY_THEMES
+        ax.text(n + 0.4, y, f"{n}  (avg {r:.1f} stars){'  SAFETY' if safe else ''}", va="center", fontsize=8,
+                color=RED if safe else INK2, fontweight="bold" if safe else "normal")
+    ax.set_xlabel(f"Negative comments, {facts['window']['from']} to {facts['window']['to']} (sentiment from text)", color=INK2, fontsize=9)
+    ax.set_title("Complaint themes: brakes and gears go straight to maintenance", loc="left", color=INK, fontsize=12, fontweight="bold")
+    fig.tight_layout(); fig.savefig(out / "chart_complaints_full_data.png", dpi=200); plt.close(fig)
+    return facts
 
 
 # ------------------------------------------------------------------ main
@@ -349,7 +409,7 @@ def main(week_start=None):
     themes_q = (neg_q.groupby("theme").agg(n=("feedback_id", "size"), avg_rating=("rating", "mean"),
                                            high_severity=("severity", lambda x: int((x == "high").sum())))
                 .sort_values("n", ascending=False).round(2))
-    themes_q.to_csv(OUT / "feedback_themes_to_date.csv")
+    themes_q.to_csv(OUT / "feedback_themes_to_week_end.csv")
 
     weekly, monthly, comp = trends(t_all, f_all, we)
     weekly.to_csv(OUT / "trend_weekly_trips.csv"); monthly.to_csv(OUT / "trend_monthly.csv")
@@ -399,7 +459,7 @@ def main(week_start=None):
                           "top_issues": neg.theme.value_counts().head(5).to_dict(),
                           "safety_escalations": int(f.safety.sum()),
                           "rating_text_disagree": int(f.needs_review.sum())},
-        "feedback_to_date": {"total": len(f_upto), "negative": len(neg_q), "positive": int((f_upto.sentiment == "positive").sum()),
+        "feedback_to_week_end": {"window": f"{f_all.date.min().date()} to {(we - pd.Timedelta(days=1)).date()}", "total": len(f_upto), "negative": len(neg_q), "positive": int((f_upto.sentiment == "positive").sum()),
                              "safety_mentions": int(neg_q.safety.sum()),
                              "brakes": int((neg_q.theme == "Brakes loose").sum()),
                              "gears": int((neg_q.theme == "Gears slipping").sum()),
@@ -408,6 +468,7 @@ def main(week_start=None):
         "trend": {"monthly": monthly.to_dict("index"), "complaints_by_month": comp.to_dict("index")},
     }
     (OUT / "facts.json").write_text(json.dumps(facts, indent=2, default=str))
+    dataset_summary(t_all, f_all, s)
     charts(prof, we_prof, thr, flows, plan, curve, themes_q, weekly)
     print(json.dumps(facts, indent=2, default=str))
 
@@ -505,7 +566,7 @@ def charts(prof, we_prof, thr, flows, plan, curve, themes_q, weekly):
         safe = name in SAFETY_THEMES
         ax.text(n + 0.4, y, f"{n}  (avg {r:.1f} stars){'  SAFETY' if safe else ''}", va="center", fontsize=8,
                 color=RED if safe else INK2, fontweight="bold" if safe else "normal")
-    ax.set_xlabel("Negative comments to date (sentiment read from the text)", color=INK2, fontsize=9)
+    ax.set_xlabel("Negative comments from 1 Jan to the end of the reporting week (sentiment from text)", color=INK2, fontsize=9)
     ax.set_title("Complaint themes: brakes and gears go straight to maintenance", loc="left", color=INK, fontsize=12, fontweight="bold")
     fig.tight_layout(); fig.savefig(OUT / "chart5_complaints_safety.png", dpi=200); plt.close(fig)
 

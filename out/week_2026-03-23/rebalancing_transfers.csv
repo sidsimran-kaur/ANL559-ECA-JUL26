@@ -1,12 +1,12 @@
 from,to,bikes
 Serangoon,Raffles Place,3
-Somerset,Raffles Place,1
-Bishan,Changi Business Park,2
-Bugis,Changi Business Park,1
+Bishan,Raffles Place,1
+Bugis,Changi Business Park,2
+Ang Mo Kio,Changi Business Park,1
 Paya Lebar,Marina Bay,2
 Somerset,Marina Bay,1
-Bugis,Tanjong Pagar,1
+Bishan,Tanjong Pagar,1
 Ang Mo Kio,Tanjong Pagar,1
-Buona Vista,Jurong East,1
+Somerset,Jurong East,1
 Sentosa,one-north,1
 HarbourFront,Clarke Quay,1

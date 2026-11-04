@@ -60,7 +60,53 @@ for raw in nums:
         status = "UNTRACED"; bad.append(raw)
     print(f"{status:18s} {raw}")
 print(f"\n{len(nums) - len(bad)}/{len(nums)} numbers traced to facts.json")
-if bad:
-    print("UNTRACED:", ", ".join(bad), "-> report stays DRAFT; fix or justify before sign-off")
+
+# ---- Part 2: every number written next to a station name must belong to THAT station in facts.json
+
+def station_pairs(obj, out):
+    """Collect (station, value) pairs from every dict in facts.json keyed by station name."""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if isinstance(v, (int, float)) and not isinstance(v, bool):
+                out.setdefault(k, set()).add(round(float(v), 2))
+            station_pairs(v, out)
+    elif isinstance(obj, list):
+        for v in obj:
+            station_pairs(v, out)
+
+
+pairs = {}
+station_pairs(facts, pairs)
+stations = [s for s in pairs if s[:1].isupper() or s == "one-north"]
+transfers = {(t["from"], t["to"], t["bikes"]) for t in facts.get("rebalancing", {}).get("transfers", [])}
+name_re = "|".join(re.escape(s) for s in sorted(stations, key=len, reverse=True))
+pair_bad, n_pairs = [], 0
+# "A → B 3" transfers
+for a, b, n in re.findall(rf"({name_re})\s*→\s*({name_re})\s+(\d+)", text):
+    n_pairs += 1
+    if (a, b, int(n)) not in transfers:
+        pair_bad.append(f"{a} → {b} {n} (not in the transfer plan)")
+text_no_arrows = re.sub(rf"({name_re})\s*→\s*({name_re})\s+\d+", " ", text)
+# "A, B and C 1 each" groups
+for group, n in re.findall(rf"((?:(?:{name_re})(?:,\s*|\s+and\s+))+(?:{name_re}))\s+(\d+(?:\.\d+)?)\s+each", text_no_arrows):
+    for st in re.findall(name_re, group):
+        n_pairs += 1
+        if round(float(n), 2) not in pairs.get(st, set()):
+            pair_bad.append(f"{st} {n} (from a list; facts has {sorted(pairs.get(st, []))})")
+text_no_groups = re.sub(rf"((?:(?:{name_re})(?:,\s*|\s+and\s+))+(?:{name_re}))\s+\d+(?:\.\d+)?\s+each", " ", text_no_arrows)
+# "Station 4" / "Station 2.8"
+for st, n in re.findall(rf"({name_re})\s+(\d+(?:\.\d+)?)(?![\d:])", text_no_groups):
+    n_pairs += 1
+    if round(float(n), 2) not in pairs.get(st, set()):
+        pair_bad.append(f"{st} {n} (facts has {sorted(pairs.get(st, []))})")
+print(f"{n_pairs - len(pair_bad)}/{n_pairs} station-number pairs match facts.json")
+for b in pair_bad:
+    print("MISMATCH          ", b)
+
+if bad or pair_bad:
+    if bad:
+        print("UNTRACED:", ", ".join(bad), "-> report stays DRAFT; fix or justify before sign-off")
+    if pair_bad:
+        print("MISMATCHED PAIRS -> a number is attached to the wrong station; report stays DRAFT")
     sys.exit(1)
 print("All numbers traced -> ready for human review")

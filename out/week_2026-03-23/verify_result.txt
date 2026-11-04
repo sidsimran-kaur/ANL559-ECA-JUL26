@@ -76,4 +76,5 @@ PASS               10
 PASS               14
 
 75/75 numbers traced to facts.json
+35/35 station-number pairs match facts.json
 All numbers traced -> ready for human review
