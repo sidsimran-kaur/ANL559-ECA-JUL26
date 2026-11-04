@@ -53,13 +53,13 @@ C.push(p("Every Monday, the analyst exports last week's trips and feedback into 
 C.push(h2("The work order"));
 C.push(p("The goal is a decision-ready weekly report, with next week's rebalancing plan, that takes the analyst under 30 minutes. The inputs are the three data files, with the latest complete week analysed first, plus the approved taxonomy and definitions."));
 C.push(p("No personal data may enter prompts, every number is computed in code rather than by the language model, the model may quote only figures in facts.json, and comment text is treated as data, never as instructions."));
-C.push(p("The output is accepted only if the data contract passes, control totals match the source, every figure traces to facts.json and matches an independent recalculation, there are at least four charts, and a person signs off. It produces a two-page report, a rebalancing plan, safety and needs-review lists, a data-quality log and an AI-use log entry."));
+C.push(p("The output is accepted only if the data contract passes, control totals match the source, every figure traces to facts.json and matches an independent recalculation, there are at least four charts, and a person signs off. It produces a two-page report, a rebalancing plan, a safety list, a log of rating–text contradictions, a data-quality log and an AI-use log entry."));
 C.push(h2("The automated pipeline"));
 C.push(p("Each of the six steps produces a checkable output."));
 C.push(num("**Validate.** A Claude-written, human-reviewed Python data contract checks keys, blanks, stations, durations, overlapping bike use and regions, and stops the run on a hard failure."));
 C.push(num("**Compute.** The script detects peak hours from the data, checks their consistency, and calculates each station's net bike flow per peak."));
 C.push(num("**Rebalance.** It sets each station's opening target, replays the latest week to compare overnight and midday rebalancing, and lists the nightly moves."));
-C.push(num("**Classify.** A language model labels each comment's theme and sentiment from its text, returned as JSON; stars give severity, and brake and gear complaints are flagged as safety issues."));
+C.push(num("**Classify.** A language model labels each comment's theme and sentiment from its text, returned as JSON; stars give severity, the script tests which complaint types lower ratings most, and brake and gear complaints are flagged as safety issues."));
 C.push(num("**Draft.** A language model writes the report into a fixed template from facts.json only."));
 C.push(num("**Check.** One script traces every number to facts.json, a second recalculates key figures independently, and the analyst reviews."));
 C.push(p("**Why this design.** A language model predicts text rather than calculating, so it can state a wrong figure confidently. With arithmetic in code and facts.json as the only source of numbers, it cannot invent a figure, every number traces to the raw data, and only aggregates reach the AI tool."));
@@ -68,7 +68,7 @@ C.push(h2("Points where a human must check or approve"));
 C.push(p("The AI does the routine work, but a person owns four decisions."));
 C.push(num("**At set-up,** the operations manager approves the work order, taxonomy and definitions; any change needs new sign-off, including when the pipeline detects shifted peak hours.", "n2"));
 C.push(num("**After validation,** the analyst investigates any failure or new warning, because an error-free run starts the checking rather than ending it.", "n2"));
-C.push(num("**After classification,** the analyst reviews comments whose rating contradicts their text, and brake and gear complaints go to the maintenance lead the same day.", "n2"));
+C.push(num("**After classification,** the analyst approves any new type of comment and reviews any complaint type that has moved onto or off the rating watch list, and brake and gear complaints go to the maintenance lead the same day. Comments whose rating contradicts their text are logged rather than reviewed one by one, because both signals are analysed and nothing is rejected.", "n2"));
 C.push(num("**Before release,** the analyst checks the findings make operational sense; business-district stations emptying every morning runs against commuter intuition, so the field team confirms it. The operations lead approves the rebalancing plan before trucks move, and the operations manager signs off.", "n2"));
 
 // ---------------------------------------------------------------- 1b
@@ -79,7 +79,7 @@ C.push(p("I used Claude (Opus 5.5) in chat to profile the data and propose the t
 C.push(h2("Data processing and quality issues"));
 C.push(p("The data covers 6,500 trips, 20 stations and 300 comments from 1 January to 31 March 2026. Basic checks all pass, but deeper checks found five silent issues (rows 1–2)."));
 C.push(p("First, 14 pairs of trips place one bike on two journeys at once. In 13 pairs the trips start at different stations, so a bike ID was probably mistyped while the rides are genuine. With no way to tell which record is wrong, deleting one would be a guess that could remove a real ride, so both are kept for station analysis and listed for review. Dropping one trip per pair leaves every result unchanged (row 20)."));
-C.push(p("Second, 14 of 20 station regions do not match the station's location, so regions are not used. Third, distance varies by about 1.4 km for the same station pair, so transfers are paired by size, not route. Fourth, 63 ratings contradict their comment, so sentiment comes from the text and stars give severity. Fifth, comments carry no station. No rows were dropped or changed."));
+C.push(p("Second, 14 of 20 station regions do not match the station's location, so regions are not used. Third, distance varies by about 1.4 km for the same station pair, so transfers are paired by size, not route. Fourth, 63 ratings contradict their comment, so sentiment comes from the text, stars give severity, and these comments are logged rather than reviewed one by one. Fifth, comments carry no station. No rows were dropped or changed."));
 C.push(h2("Automated output"));
 C.push(p("**Peak hours.** I first assumed 07:00–09:00 and 17:30–19:30, but the pipeline defines peaks from the data as weekday 30-minute slots with at least 1.5 times average demand. This gives 08:00–10:00, 12:00–13:00 and 17:00–20:00, carrying 71.8% of weekday trips. They are consistent: 08:00 was the busiest morning hour in 10 of 12 complete weeks and 18:00 the busiest evening hour in 11 (Figure 1; row 16)."));
 C.push(img("out/week_2026-03-23/chart1_peak_hours.png", 540, 254));
@@ -90,28 +90,44 @@ C.push(img("out/week_2026-03-23/chart3_rebalancing_plan.png", 500, 353));
 C.push(caption("Figure 2. Nightly weekday rebalancing plan with opening targets"));
 C.push(img("out/week_2026-03-23/chart4_stock_through_day.png", 520, 294));
 C.push(caption("Figure 3. Bikes on hand through an average weekday at the four stations receiving the most bikes"));
-C.push(p("**Feedback and safety.** By text, 214 comments to date are negative and 82 positive; GPS errors (27) and morning shortages (26) lead. Brake (20) and gear (6) complaints are flagged for same-day maintenance (Figure 4; row 17)."));
-C.push(img("out/week_2026-03-23/chart5_complaints_safety.png", 480, 300));
-C.push(caption("Figure 4. Complaint themes to date, with safety themes in red"));
-C.push(p("**Trend.** Trips rose from 70.9 to 74.3 a day between January and March, led by casual riders. The latest week was 8.1% below the four-week average but within the normal range of 468 to 545, so it is a signal to watch."));
+C.push(p("**Feedback and safety.** Across the quarter, 218 comments are negative and 82 positive by their text, and GPS errors and morning shortages lead with 27 each. Brake (20) and gear (6) complaints are flagged for same-day maintenance (Figure 4; row 17)."));
+C.push(img("out/dataset_summary/chart_complaints_full_data.png", 480, 300));
+C.push(caption("Figure 4. Complaint themes, 1 January to 31 March 2026, with safety themes in red"));
+C.push(p("**Which complaints hurt the rating most.** Pairing each comment's theme with its star rating shows which complaints lower ratings by more than chance would explain (Mann–Whitney test, p < 0.01). Five do: app crashes on unlock average 2.32 stars, 1.02 below other comments, followed by double charges, loose brakes, app payment failures and morning shortages (Figure 5; row 22). These form CityCycle's rating watch list. Two complaints barely show in the stars, because GPS errors average 4.19 and peak-hour shortages 4.5, so they must be tracked from the text instead."));
+C.push(img("out/dataset_summary/chart_rating_impact.png", 520, 318));
+C.push(caption("Figure 5. Star rating of each complaint type compared with all other comments"));
+C.push(p("**Trend.** Trips rose from 70.9 to 74.4 a day between January and March, led by casual riders (Figure 6). The latest week was 8.1% below the four-week average but within the normal range of 468 to 545, so it is a signal to watch."));
+C.push(img("out/week_2026-03-23/chart6_weekly_trend.png", 520, 247));
+C.push(caption("Figure 6. Weekly trips by rider type, complete weeks from 5 January to 29 March 2026"));
 C.push(h2("Prompts and verification"));
-C.push(p("In the key prompts (rows 15–20) I asked Claude to correct the design for daily rebalancing, find and test the peak hours, flag brakes and gears, and show how and when to rebalance using the latest week."));
-C.push(p("Figures were checked by the pipeline, by an independent recalculation in different code, and by Excel spot-checks. All 11 independent checks matched for the worked-example week, including 486 trips, morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Place, peaks at 08:00 and 18:00, 26 safety comments, and 15 bikes delivered and collected."));
+C.push(p("In the key prompts (rows 15–22) I asked Claude to correct the design for daily rebalancing, find and test the peak hours, flag brakes and gears, show how and when to rebalance using the latest week, counter-check every number, and find which complaints lower ratings most."));
+C.push(p("After I found a quarter figure quoted from a shorter window (row 21), a final script now recomputes every number in this write-up from the raw data, and checks each station figure in the weekly report, before anything is submitted. Figures were also checked by Excel spot-checks. All 13 independent checks matched for the worked-example week, including 486 trips, morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Place, peaks at 08:00 and 18:00, 26 safety comments, and 15 bikes delivered and collected."));
 C.push(h2("Worked example: the week of 23–29 March 2026"));
-C.push(p("The pipeline loaded 486 trips and 21 comments; the contract raised no failures and four warnings. Detected peaks matched the approved windows, and Tanjong Pagar, Raffles Place and Clarke Quay lost the most bikes each morning. It recommended overnight rebalancing of 15 bikes per weekday night. Of 21 comments, 14 were negative, 10 went for review and none raised a safety issue."));
-C.push(p("Claude drafted the report from facts.json alone (Appendix A; row 14). All 75 numbers traced, and a planted error (45 trips instead of 42) was caught. I reviewed the plan and watch list before signing off. The run takes about three seconds each week."));
+C.push(p("The pipeline loaded 486 trips and 21 comments; the contract raised no failures and four warnings. Detected peaks matched the approved windows, and Tanjong Pagar, Raffles Place and Clarke Quay lost the most bikes each morning. It recommended overnight rebalancing of 15 bikes per weekday night. Of 21 comments, 14 were negative, 10 had ratings that contradicted their text and were logged, and none raised a safety issue. The review trigger flagged that app payment failures had joined the rating watch list."));
+C.push(p("Claude drafted the report from facts.json alone (Appendix A; row 14). All 88 numbers traced, and a planted error (45 trips instead of 42) was caught. I reviewed the plan, the watch list and that complaint type before signing off. The run takes about three seconds each week."));
 
 // ---------------------------------------------------------------- appendices
 section = null;
 C.push(new Paragraph({ children: [new PageBreak()] }));
 C.push(h1("Appendix A: Automated output for the worked-example week (draft)"));
 const md = fs.readFileSync(path.join(ROOT, WK, "weekly_report_draft.md"), "utf8").split("\n");
-let tbl = [];
+let tbl = []; var appendixChart = 0;
 const flush = () => { if (tbl.length) { C.push(table([4200, 2400, 2426], tbl, 17, false)); tbl = []; } };
 for (const line of md) {
   if (line.startsWith("|")) { if (!/^\|[-| ]+\|$/.test(line)) tbl.push(line.split("|").slice(1, -1).map(s => s.trim())); continue; }
   flush();
   if (!line.trim()) continue;
+  const im = line.match(/^!\[([^\]]*)\]\(([^)]+)\)/);
+  if (im) {
+    const buf = fs.readFileSync(path.join(ROOT, WK, im[2]));
+    const w0 = buf.readUInt32BE(16), h0 = buf.readUInt32BE(20);   // PNG header: width, height
+    const w = 470, h = Math.round(w * h0 / w0);
+    C.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60, after: 40 },
+      children: [new ImageRun({ type: "png", data: buf, transformation: { width: w, height: h } })] }));
+    appendixChart = (typeof appendixChart === "number" ? appendixChart : 0) + 1;
+    C.push(caption(`Chart A${appendixChart}. ${im[1]}`));
+    continue;
+  }
   if (line.startsWith("# ")) C.push(new Paragraph({ spacing: { before: 120, after: 80 }, children: [new TextRun({ text: line.slice(2), bold: true, size: 24 })] }));
   else if (line.startsWith("## ")) C.push(new Paragraph({ spacing: { before: 120, after: 60 }, children: [new TextRun({ text: line.slice(3), bold: true, color: "2E5597" })] }));
   else if (line.startsWith("- ")) C.push(new Paragraph({ numbering: { reference: "b", level: 0 }, spacing: { after: 40 }, children: runs(line.slice(2), 19) }));
@@ -148,6 +164,21 @@ const newRows = [
   ["20", "2 Nov 2026", "BREAK\nOverlapping trips", "Why do we flag but keep all overlapping trips? Shouldn't one be discarded?",
     "14 pairs (28 trips) put one bike on two journeys at once; 13 pairs start at different stations, so a bike_id was most likely mistyped. No basis to choose which record is wrong. Sensitivity test: dropping the second trip of every pair leaves peaks, targets, riders turned away (0) and bikes moved (22) unchanged. Pairs written to overlapping_trips_review.csv.",
     "Looked at the 14 pairs in the review file; re-ran sensitivity_overlaps.py.", "Accepted: keep both for station analysis, flag for review, exclude only from per-bike analysis.", "1b data-quality section; sensitivity_overlapping_trips.csv"],
+  ["21", "4 Nov 2026", "BREAK\nNumber check", "There is an issue with the computation of the comments: there were 218 negative comments and 27 about morning shortages, not 214 and 26. Fix it, and write a script to counter-check that all numbers in the reports are correct going forward.",
+    "Cause: the write-up quoted figures counted only to the end of the reporting week (29 Mar), labelled 'to date', as if they were the quarter; 4 comments on 30-31 Mar were missed (incl. 1 morning shortage). Same slip for March trips per day (74.3 vs 74.4). Fix: pipeline writes a separate full-dataset summary; write-up uses it; windows labelled. New check_report_numbers.py recomputes every registered number from the raw CSVs with independent code and fails on any mismatch or any unregistered number.",
+    "Counted negative comments and 'no bikes available at my station in the morning' with COUNTIF over all 300 rows (218 and 27).", "Accepted: write-up corrected; check_report_numbers.py must pass before submission.", "report/report_claims.json; workflow/check_report_numbers.py; check_result.txt"],
+  ["22", "4 Nov 2026", "BUILD\nRating impact", "Could you incorporate the sentiments to show which complaints seem to affect the rating most significantly and hence should be watched closely by CityCycle?",
+    "For each complaint theme: average stars, gap to all other comments, share of 1–2 star ratings, Mann–Whitney p-value. Watch list (p < 0.01, lower): app crash 2.32 (−1.02), double charge 2.52, brakes 2.55, payment failure 2.61, morning shortage 2.67. Hidden by high stars: GPS 4.19, peak-hour shortage 4.5. Chart 7 / Figure 5; rating_impact.csv each run.",
+    "Excel AVERAGEIF of rating by comment text (2.32 for app crash); truth.py recomputes the test from the formula and matched all 12 themes.", "Accepted. Noted: 12 themes are tested, so a stricter correction would leave morning shortages just outside (p = 0.009); kept on the list because it is also an operational priority.", "Figure 5; out/dataset_summary/rating_impact.csv; work_order.md"],
+  ["23", "4 Nov 2026", "BREAK\nCharts in output", "Why does my draft report have no charts? It is supposed to have them.",
+    "The write-up's Figures 1–6 were present; the gap was the automated weekly report (Appendix A), which was text and one table only, breaking the work order's 'at least four charts'. Fix: the draft now places four charts (peak flows, rebalancing plan, weekly trend, rating impact); render_report.py turns it into weekly_report.docx with the charts embedded; verify_report.py now fails if fewer than four charts are present or a chart file is missing.",
+    "Opened weekly_report.docx and checked the four charts sit under the right sections.", "Accepted: acceptance criterion now enforced in code.", "out/week_2026-03-23/weekly_report.docx; Appendix A"],
+  ["24", "4 Nov 2026", "BREAK\nReview step", "Do you think we can do away with the review for the contradicting text and ratings, given we are analysing both and it will not result in the info being rejected?",
+    "Agreed, with safeguards. Comments are 18 fixed phrases under an approved taxonomy, so mislabelling risk is near zero; 35 of the 63 contradictions are GPS and peak-hour complaints already reported as 'hidden by high stars'; the review changed no figure or decision. Replaced by: a log (needs_review.csv) with no sign-off; a run stop for any new comment type; and a review trigger when a complaint type moves onto or off the rating watch list or 'hidden by high stars' vs last week. A weekly threshold on the contradiction rate was rejected because the rate swings 6–48% on small numbers. This week the trigger fired: app payment failures joined the watch list and wobbly seats left it.",
+    "Independent check recomputes the watch list for both weeks (13 of 13 match).", "Accepted: work order v2.1. Re-instate a sample review if free-text feedback is introduced (noted for 1d).", "work_order.md; weekly report section 5; 1a checkpoint 3"],
+  ["25", "4 Nov 2026", "BUILD\nRider feedback section", "Can we improve 'What riders are saying' in the report to be easier to read, with a chart to visualise what is being said?",
+    "Section 5 rewritten as a one-line summary plus labelled points (most mentioned, what riders liked, complaints that hurt ratings, complaints the stars hide, for the analyst, safety). New chart: this week's comments by theme, complaints left and praise right, coloured by rating-watch / hidden / safety status. Praise counts added to facts.json.",
+    "Checked the chart counts against feedback_classified.csv (14 complaints, 7 praise); corrected 'service in general' to 'value for money' after reading the actual comment.", "Accepted after the wording fix.", "out/week_2026-03-23/chart8_comments_this_week.png; weekly_report.docx section 5"],
 ];
 const LOGW = [400, 800, 1000, 3300, 3200, 2200, 1800, 1700];
 const logTable = (size) => table(LOGW, [header, ...rows, ...newRows], size, false);
@@ -177,9 +208,9 @@ const landscape = { page: { size: { orientation: PageOrientation.LANDSCAPE }, ma
     { properties: portrait, footers: footer, children: C },
     { properties: landscape, footers: footer, children: L },
   ] });
-  fs.writeFileSync(path.join(ROOT, "report", "ANL559_ECA_1a_1b_v4.docx"), await Packer.toBuffer(report));
+  fs.writeFileSync(path.join(ROOT, "report", "ANL559_ECA_1a_1b_v10.docx"), await Packer.toBuffer(report));
   const logDoc = new Document({ styles, numbering, sections: [{ properties: landscape, children: [h1("AI-use log · ANL559 ECA Question 1"), p(LOG_INTRO), logTable(15)] }] });
-  fs.writeFileSync(path.join(ROOT, "ai_use_log", "ANL559_ECA_AI_use_log_v3.docx"), await Packer.toBuffer(logDoc));
+  fs.writeFileSync(path.join(ROOT, "ai_use_log", "ANL559_ECA_AI_use_log_v8.docx"), await Packer.toBuffer(logDoc));
   const esc = c => String(c).replace(/\n/g, " / ").replace(/\|/g, "/");
   const mdLog = ["# AI-use log · ANL559 ECA Question 1", "", LOG_INTRO, "", "| " + header.join(" | ") + " |", "|" + header.map(() => "---").join("|") + "|",
     ...[...rows, ...newRows].map(r => r.length === 1 ? `| **${esc(r[0])}** |${" |".repeat(header.length - 1)}` : "| " + r.map(esc).join(" | ") + " |"), ""].join("\n");

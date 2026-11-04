@@ -63,11 +63,12 @@ PASS               21
 PASS               14
 PASS               7
 PASS               4.0
-PASS               4,
-PASS               3,
-PASS               2,
-PASS               2,
-PASS               2.
+PASS               4
+PASS               3
+PASS               2
+PASS               4
+PASS               2
+PASS               1
 PASS               1
 PASS               29
 PASS               2.38
@@ -87,7 +88,7 @@ PASS               6.
 PASS               10
 PASS               14
 
-87/87 numbers traced to facts.json
+88/88 numbers traced to facts.json
 35/35 station-number pairs match facts.json
-4 charts embedded (minimum 4)
+5 charts embedded (minimum 4)
 All numbers traced -> ready for human review

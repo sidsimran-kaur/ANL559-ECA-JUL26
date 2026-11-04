@@ -63,11 +63,12 @@ PASS               21
 PASS               14
 PASS               7
 PASS               4.0
-PASS               4,
-PASS               3,
-PASS               2,
-PASS               2,
-PASS               2.
+PASS               4
+PASS               3
+PASS               2
+PASS               4
+PASS               2
+PASS               1
 PASS               1
 PASS               29
 PASS               2.38
@@ -87,8 +88,9 @@ PASS               6.
 PASS               10
 PASS               14
 
-86/87 numbers traced to facts.json
+87/88 numbers traced to facts.json
 34/35 station-number pairs match facts.json
 MISMATCH           Changi Business Park 45 (facts has [1.4, 3.0, 18.0, 42.0])
+5 charts embedded (minimum 4)
 UNTRACED: 45 -> report stays DRAFT; fix or justify before sign-off
 MISMATCHED PAIRS -> a number is attached to the wrong station; report stays DRAFT

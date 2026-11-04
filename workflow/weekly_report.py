@@ -351,6 +351,42 @@ def impact_chart(df, path, window):
     fig.tight_layout(); fig.savefig(path, dpi=200); plt.close(fig)
 
 
+def comments_chart(f_week, imp, path, label):
+    """What riders said this week: complaints to the left, praise to the right, one bar per theme.
+    Complaint colour = status: red safety, orange rating watch list, blue hidden by high stars, grey other."""
+    watch = set(imp[imp.verdict.str.startswith("watch closely")].index)
+    hidden = set(imp[imp.verdict.str.startswith("ratings unaffected")].index)
+    neg = f_week[f_week.sentiment == "negative"].groupby("theme").rating.agg(["size", "mean"])
+    pos = f_week[f_week.sentiment == "positive"].groupby("theme").rating.agg(["size", "mean"])
+    neg = neg.sort_values("size"); pos = pos.sort_values("size")
+    names = list(pos.index) + list(neg.index)
+    vals = list(pos["size"]) + list(-neg["size"])
+    stars = list(pos["mean"]) + list(neg["mean"])
+    def colour(th, v):
+        if v > 0: return "#1baf7a"
+        if th in SAFETY_THEMES: return RED
+        if th in watch: return ORANGE
+        if th in hidden: return BLUE
+        return GREY
+    fig, ax = plt.subplots(figsize=(8.5, 0.42 * len(names) + 1.6)); style(ax)
+    ax.barh(range(len(names)), vals, color=[colour(n, v) for n, v in zip(names, vals)], height=0.7)
+    ax.set_yticks(range(len(names))); ax.set_yticklabels([n.replace("Praise - ", "Praise: ") for n in names])
+    ax.axvline(0, color=INK2, lw=1); ax.xaxis.grid(True, color=GRID, lw=0.8)
+    lim = max(abs(v) for v in vals) + 2.5; ax.set_xlim(-lim, lim)
+    ax.set_xticks([t for t in range(-int(lim), int(lim) + 1) if t % 1 == 0]); ax.set_xticklabels([abs(t) for t in ax.get_xticks()])
+    for y, (v, r) in enumerate(zip(vals, stars)):
+        ax.text(v + (0.15 if v > 0 else -0.15), y, f"{abs(v)}  ({r:.1f} stars)", va="center",
+                ha="left" if v > 0 else "right", fontsize=8, color=INK2)
+    ax.text(-0.15, len(names) - 0.3, "complaints", ha="right", fontsize=9, color=INK2, fontweight="bold")
+    ax.text(0.15, len(names) - 0.3, "praise", ha="left", fontsize=9, color=INK2, fontweight="bold")
+    ax.set_xlabel(f"Number of comments, {label}", color=INK2, fontsize=9)
+    ax.text(0, 1.02, "Orange = on rating watch list   Blue = hidden by high stars   Red = safety   Grey = other   Green = praise",
+            transform=ax.transAxes, ha="left", fontsize=7.5, color=INK2)
+    ax.set_title(f"What riders said this week: {int(-sum(v for v in vals if v < 0))} complaints, {int(sum(v for v in vals if v > 0))} praise",
+                 loc="left", color=INK, fontsize=12, fontweight="bold", pad=20)
+    fig.tight_layout(); fig.savefig(path, dpi=200); plt.close(fig)
+
+
 # ------------------------------------------------------------------ full-dataset summary
 def dataset_summary(t, f, s):
     """Figures for the WHOLE file (the quarter), kept separate from the weekly figures so that a
@@ -516,6 +552,8 @@ def main(week_start=None):
         "feedback_week": {"total": len(f), "negative": len(neg), "positive": int((f.sentiment == "positive").sum()),
                           "avg_rating": round(float(f.rating.mean()), 2) if len(f) else None,
                           "top_issues": neg.theme.value_counts().head(5).to_dict(),
+                          "complaints_by_theme": neg.theme.value_counts().to_dict(),
+                          "praise_by_theme": f[f.sentiment == "positive"].theme.value_counts().to_dict(),
                           "safety_escalations": int(f.safety.sum()),
                           "rating_text_disagree": int(f.needs_review.sum()),
                           "rating_text_disagree_handling": "logged in needs_review.csv, not reviewed: sentiment comes from the text and stars give severity, so nothing is rejected",
@@ -537,6 +575,7 @@ def main(week_start=None):
     dataset_summary(t_all, f_all, s)
     charts(prof, we_prof, thr, flows, plan, curve, themes_q, weekly)
     impact_chart(imp, OUT / "chart7_rating_impact.png", f"1 Jan to {(we - pd.Timedelta(days=1)).date()}")
+    comments_chart(f, imp, OUT / "chart8_comments_this_week.png", f"{ws.date()} to {(we - pd.Timedelta(days=1)).date()}")
     print(json.dumps(facts, indent=2, default=str))
 
 
