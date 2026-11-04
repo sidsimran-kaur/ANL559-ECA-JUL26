@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\sidsi\OneDrive\Desktop\SUSS\Sem 5 - Aug 26\ANL559 Generative AI\ANL559 ECA\workflow\check_report_numbers.py", line 22, in <module>
+    import docx
+ModuleNotFoundError: No module named 'docx'
