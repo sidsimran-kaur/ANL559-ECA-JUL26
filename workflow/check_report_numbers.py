@@ -38,7 +38,22 @@ def norm(s):
 
 
 def writeup_text(path):
-    text = norm("\n".join(p.text for p in docx.Document(path).paragraphs))
+    """Body text in document order, including tables (cells joined with ' | ')."""
+    d = docx.Document(path); parts = []
+    for el in d.element.body.iterchildren():
+        tag = el.tag.split("}")[1]
+        if tag == "p":
+            parts.append("".join(t.text or "" for t in el.iter() if t.tag.endswith("}t")))
+        elif tag == "tbl":
+            for tr in el.iter():
+                if tr.tag.endswith("}tr"):
+                    cells = []
+                    for tc in tr:
+                        if tc.tag.endswith("}tc"):
+                            cells.append(" ".join("".join(t.text or "" for t in p.iter() if t.tag.endswith("}t"))
+                                                  for p in tc if p.tag.endswith("}p")))
+                    parts.append(" | ".join(cells))
+    text = norm("\n".join(parts))
     return text[text.index("1a. Design"):text.index("Appendix A:")]
 
 
@@ -59,7 +74,7 @@ def equal(written, true, absolute=False):
 
 def main():
     claims_file = json.loads((ROOT / "report" / "report_claims.json").read_text(encoding="utf-8"))
-    path = Path(sys.argv[1]) if len(sys.argv) > 1 else sorted((ROOT / "report").glob("ANL559_ECA_1a_1b_v*.docx"),
+    path = Path(sys.argv[1]) if len(sys.argv) > 1 else sorted((ROOT / "report").glob("ANL559_ECA_1a*_v*.docx"),
                                                                key=lambda p: int(re.search(r"_v(\d+)", p.stem).group(1)))[-1]
     week = claims_file["week"]
     T = truth.compute(week)

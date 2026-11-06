@@ -9,7 +9,7 @@ const {
 const ROOT = path.resolve(__dirname, "..");
 const WK = "out/week_2026-03-23";
 const FONT = "Calibri";
-const words = { "1a": 0, "1b": 0 }; let section = null;
+const words = { "1a": 0, "1b": 0, "1c": 0 }; let section = null;
 const count = t => { if (section) words[section] += String(t).replace(/\*\*/g, "").split(/\s+/).filter(w => /[A-Za-z0-9]/.test(w)).length; };
 const runs = (t, size) => String(t).split(/(\*\*[^*]+\*\*)/).filter(Boolean).map(x =>
   x.startsWith("**") ? new TextRun({ text: x.slice(2, -2), bold: true, size }) : new TextRun({ text: x, size }));
@@ -106,6 +106,34 @@ C.push(h2("Worked example: the week of 23–29 March 2026"));
 C.push(p("The pipeline loaded 486 trips and 21 comments; the contract raised no failures and four warnings. Detected peaks matched the approved windows, and Tanjong Pagar, Raffles Place and Clarke Quay lost the most bikes each morning. It recommended overnight rebalancing of 15 bikes per weekday night. Of 21 comments, 14 were negative, 10 had ratings that contradicted their text and were logged, and none raised a safety issue. The review trigger flagged that app payment failures had joined the rating watch list."));
 C.push(p("Claude drafted the report from facts.json alone (Appendix A; row 14). All 88 numbers traced, and a planted error (45 trips instead of 42) was caught. I reviewed the plan, the watch list and that complaint type before signing off. The run takes about three seconds each week."));
 
+// ---------------------------------------------------------------- 1c
+C.push(new Paragraph({ children: [new PageBreak()] }));
+section = "1c";
+C.push(h1("1c. Assess the business value"));
+C.push(p("**Time and effort.** Today the analyst and the operations lead spend an estimated 6.4 hours a week producing the report and planning the nightly rebalancing (Table 1). The pipeline turns the raw files into a checked report with charts in about four seconds. The human work that remains is reviewing the checks, reading the draft, approving the rebalancing plan, signing off and occasional upkeep, which takes about 51 minutes (Figure 7). Effort therefore shifts from assembling numbers to judging them."));
+C.push(caption("Table 1. Staff minutes per week, manual and automated (assumptions)"));
+C.push(table([4300, 2300, 2426], [
+  ["Step", "Manual", "Automated"],
+  ["Prepare data and check quality", "45", "10"],
+  ["Analyse stations and comments", "120", "0"],
+  ["Build the charts", "60", "0"],
+  ["Write and sense-check the report", "90", "15"],
+  ["Plan or approve the rebalancing", "70", "5"],
+  ["Run, sign off and upkeep", "0", "21"],
+  ["Total", "385", "51"],
+]));
+C.push(img("out/efficiency/chart_time_per_week.png", 520, 196));
+C.push(caption("Figure 7. Staff time per week, manual and automated"));
+C.push(p("**Consistency.** Manually, definitions such as the peak hours change with whoever writes the report. In the automation they are fixed in the work order and changed only with sign-off, so every week is measured the same way. Every figure in the weekly report traces to facts.json (88 of 88 this week), key figures are recomputed independently (13 checks), and the data-quality checks run every week, flagging issues a pivot table hides, such as 14 pairs of overlapping bike trips."));
+C.push(p("**Quality of insight.** The manual report describes where bikes ran out after the event. The automation says how many bikes each station should open with and when to move them, tested on weeks the rule had not seen. Because it reads the comment text, the 43 complaints that riders still rated highly (27 GPS errors and 16 peak-hour shortages) are not missed, and it shows which complaints lower ratings most."));
+C.push(p("**Efficiency gain.** On these assumptions the automation saves about 5.6 hours a week, or 87% of the time. That is about 278 hours a year over 50 working weeks, worth roughly S$11,100 at an assumed S$40 an hour. Even if the manual work took only 4 hours a week, the saving would still be about 3.1 hours. Turnaround improves too: the report is ready minutes after the week closes rather than late on Monday, and safety complaints reach maintenance the same day instead of waiting up to a week. The manual times are my own estimates, because the case gives no baseline beyond 'hours every week', and the figures exclude the AI tool subscription, which is small next to the hours saved."));
+C.push(h2("Decisions the automation improves"));
+C.push(num("**Nightly rebalancing (operations lead).** Station targets and a move list replace judgement from experience. Overnight rebalancing turned away no riders in all eight weeks tested, whereas opening every station full would have left 224 riders without a dock in the latest week, and avoiding a midday run saves about eight bike moves a day (22 instead of 30).", "n3"));
+C.push(num("**Maintenance (maintenance lead).** The 26 brake and gear complaints this quarter are escalated on the day they arrive rather than in the next weekly report.", "n3"));
+C.push(num("**App and billing priorities (management).** Three of the five complaints that most lower ratings are app or billing problems, and fixing app crashes alone would lift the average rating by about 0.085 stars.", "n3"));
+C.push(num("**Capacity planning (management).** Rising use (70.9 to 74.4 trips a day, led by casual riders) and the Raffles Place watch list show where extra docks would help first.", "n3"));
+C.push(p("Freed from routine compilation, the team regains the time the case says it lacks for actual decisions."));
+
 // ---------------------------------------------------------------- appendices
 section = null;
 C.push(new Paragraph({ children: [new PageBreak()] }));
@@ -179,6 +207,9 @@ const newRows = [
   ["25", "4 Nov 2026", "BUILD\nRider feedback section", "Can we improve 'What riders are saying' in the report to be easier to read, with a chart to visualise what is being said?",
     "Section 5 rewritten as a one-line summary plus labelled points (most mentioned, what riders liked, complaints that hurt ratings, complaints the stars hide, for the analyst, safety). New chart: this week's comments by theme, complaints left and praise right, coloured by rating-watch / hidden / safety status. Praise counts added to facts.json.",
     "Checked the chart counts against feedback_classified.csv (14 complaints, 7 praise); corrected 'service in general' to 'value for money' after reading the actual comment.", "Accepted after the wording fix.", "out/week_2026-03-23/chart8_comments_this_week.png; weekly_report.docx section 5"],
+  ["26", "6 Nov 2026", "BUILD\nBusiness value", "Let's answer 1c: compare the automated approach with the manual one on time, effort, consistency and quality of insight; estimate the efficiency gain with clear assumptions; and identify which business decisions the automation improves.",
+    "1c draft. Manual time per task written as explicit assumptions (efficiency_assumptions.json: 385 minutes); automated human time 51 minutes; pipeline run measured at about 4 seconds. efficiency_model.py computes 5.6 hours saved a week (87%), 278 hours a year, about S$11,100 at an assumed S$40 an hour; 3.1 hours even if manual work is only 4 hours. Figure 7. Four decisions: rebalancing, maintenance, app and billing priorities, capacity planning.",
+    "Checked the manual minutes against my own experience of the weekly task and adjusted them; truth.py recomputes every total from the assumptions file.", "Accepted; the manual times are labelled as my estimates because the case gives no baseline.", "1c; workflow/efficiency_assumptions.json; out/efficiency/"],
 ];
 const LOGW = [400, 800, 1000, 3300, 3200, 2200, 1800, 1700];
 const logTable = (size) => table(LOGW, [header, ...rows, ...newRows], size, false);
@@ -197,6 +228,7 @@ const styles = {
 const numbering = { config: [
   { reference: "n1", levels: [{ level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 400, hanging: 300 } } } }] },
   { reference: "n2", levels: [{ level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 400, hanging: 300 } } } }] },
+  { reference: "n3", levels: [{ level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 400, hanging: 300 } } } }] },
   { reference: "b", levels: [{ level: 0, format: LevelFormat.BULLET, text: "•", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 400, hanging: 260 } } } }] },
 ] };
 const footer = { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ children: ["ANL559 ECA · ", PageNumber.CURRENT], size: 18 })] })] }) };
@@ -208,9 +240,9 @@ const landscape = { page: { size: { orientation: PageOrientation.LANDSCAPE }, ma
     { properties: portrait, footers: footer, children: C },
     { properties: landscape, footers: footer, children: L },
   ] });
-  fs.writeFileSync(path.join(ROOT, "report", "ANL559_ECA_1a_1b_v10.docx"), await Packer.toBuffer(report));
+  fs.writeFileSync(path.join(ROOT, "report", "ANL559_ECA_1a_1b_1c_v11.docx"), await Packer.toBuffer(report));
   const logDoc = new Document({ styles, numbering, sections: [{ properties: landscape, children: [h1("AI-use log · ANL559 ECA Question 1"), p(LOG_INTRO), logTable(15)] }] });
-  fs.writeFileSync(path.join(ROOT, "ai_use_log", "ANL559_ECA_AI_use_log_v8.docx"), await Packer.toBuffer(logDoc));
+  fs.writeFileSync(path.join(ROOT, "ai_use_log", "ANL559_ECA_AI_use_log_v9.docx"), await Packer.toBuffer(logDoc));
   const esc = c => String(c).replace(/\n/g, " / ").replace(/\|/g, "/");
   const mdLog = ["# AI-use log · ANL559 ECA Question 1", "", LOG_INTRO, "", "| " + header.join(" | ") + " |", "|" + header.map(() => "---").join("|") + "|",
     ...[...rows, ...newRows].map(r => r.length === 1 ? `| **${esc(r[0])}** |${" |".repeat(header.length - 1)}` : "| " + r.map(esc).join(" | ") + " |"), ""].join("\n");
