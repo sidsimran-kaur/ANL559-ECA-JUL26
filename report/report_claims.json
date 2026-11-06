@@ -81,34 +81,6 @@
       }
     },
     {
-      "phrase": "overnight rebalancing turned away no riders",
-      "words": {
-        "no": "reb.overnight_turned_away"
-      }
-    },
-    {
-      "phrase": "raised bikes moved from 22 to 30 a day",
-      "values": {
-        "22": "reb.overnight_bikes_per_day",
-        "30": "reb.midday_bikes_per_day"
-      }
-    },
-    {
-      "phrase": "would have left 224 riders without a dock",
-      "values": {
-        "224": "reb.full_turned_away"
-      }
-    },
-    {
-      "phrase": "turned away no riders in all eight weeks",
-      "words": {
-        "eight": [
-          "reb.backtest_weeks",
-          "reb.backtest_weeks_zero_turned_away"
-        ]
-      }
-    },
-    {
       "phrase": "The plan moves 15 bikes each weekday night",
       "values": {
         "15": "reb.weekday_bikes_per_night"
@@ -151,7 +123,7 @@
       }
     },
     {
-      "phrase": "8.1% below the four-week average",
+      "phrase": "8.1% dip below the four-week average",
       "values": {
         "8.1": "week.vs_prior_4wk_pct"
       },
@@ -383,22 +355,6 @@
       }
     },
     {
-      "phrase": "turned away no riders in all eight weeks tested",
-      "words": {
-        "eight": [
-          "reb.backtest_weeks",
-          "reb.backtest_weeks_zero_turned_away"
-        ],
-        "no": "reb.overnight_turned_away"
-      }
-    },
-    {
-      "phrase": "would have left 224 riders without a dock in the latest week",
-      "values": {
-        "224": "reb.full_turned_away"
-      }
-    },
-    {
       "phrase": "saves about eight bike moves a day (22 instead of 30)",
       "values": {
         "22": "reb.overnight_bikes_per_day",
@@ -432,6 +388,48 @@
       "values": {
         "70.9": "data.jan_trips_per_day",
         "74.4": "data.mar_trips_per_day"
+      }
+    },
+    {
+      "phrase": "on the eight weeks not used to set the targets",
+      "words": {
+        "eight": "reb.backtest_weeks"
+      }
+    },
+    {
+      "phrase": "Doing nothing turned away 967 riders, opening every station full 1,880, and stocking only for the average daily loss 749",
+      "values": {
+        "967": "bl.do_nothing",
+        "1,880": "bl.open_full",
+        "749": "bl.single_signal"
+      }
+    },
+    {
+      "phrase": "A half-full rule turned away 2 and the station targets none, both moving 22.2 bikes a day, while a midday run raised this to 30.6",
+      "values": {
+        "2": "bl.open_half",
+        "22.2": "bl.bikes_targets",
+        "30.6": "bl.bikes_midday"
+      },
+      "words": {
+        "none": "bl.targets_turned_away"
+      }
+    },
+    {
+      "phrase": "Over eight unseen weeks, rebalancing every night turned away no riders, against 967 with no rebalancing at all",
+      "values": {
+        "967": "bl.do_nothing"
+      },
+      "words": {
+        "eight": "reb.backtest_weeks",
+        "no": "bl.targets_turned_away"
+      }
+    },
+    {
+      "phrase": "edge out a simple half-full rule (0 against 2 riders)",
+      "values": {
+        "0": "bl.targets_turned_away",
+        "2": "bl.open_half"
       }
     }
   ]

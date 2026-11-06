@@ -276,6 +276,45 @@ def compute(week):
     T["reb.backtest_weeks_zero_turned_away"] = bt_ok
     T["reb.backtest_weeks"] = len(cw) - 4
 
+    # ---- baseline ladder over the same unseen weeks (independent implementation)
+    half = {st: round(c / 2) for st, c in cap.items()}
+    full_n = half_n = single_n = 0
+    for i, w_ in enumerate(cw):
+        if i < 4: continue
+        prior = [r for r in trips if monday(r["st"]) in cw[i - 4:i]]
+        this = [r for r in trips if monday(r["st"]) == w_]
+        full_n += replay(this, cap, dict(cap))[0]
+        half_n += replay(this, cap, half)[0]
+        ev = station_days(prior); avg = {}
+        for st in cap:
+            losses = []
+            for d, es in ev[st].items():
+                run = lo = 0
+                for _, x in es:
+                    run += x; lo = min(lo, run)
+                losses.append(-lo)
+            avg[st] = round(statistics.mean(losses)) if losses else 0
+        single_n += replay(this, cap, avg)[0]
+    span = [r for r in trips if monday(r["st"]) in cw[4:]]
+    evs = sorted([(r["st"], -1, r["start_station"]) for r in span] + [(r["et"], 1, r["end_station"]) for r in span])
+    stock = dict(half); nothing = 0
+    for _, x, st in evs:
+        if x < 0:
+            if stock[st] == 0: nothing += 1
+            else: stock[st] -= 1
+        elif stock[st] == cap[st]: nothing += 1
+        else: stock[st] += 1
+    T["bl.do_nothing"], T["bl.open_full"], T["bl.open_half"], T["bl.single_signal"] = nothing, full_n, half_n, single_n
+    tgt_n, tgt_moves, mid_moves = 0, [], []
+    for i, w_ in enumerate(cw):
+        if i < 4: continue
+        tg = targets([r for r in trips if monday(r["st"]) in cw[i - 4:i]], cap)
+        this = [r for r in trips if monday(r["st"]) == w_]
+        n, mv, _ = replay(this, cap, tg); tgt_n += n; tgt_moves.append(mv)
+        mid_moves.append(replay(this, cap, tg, 11 * 60)[1])
+    T["bl.targets_turned_away"] = tgt_n
+    T["bl.bikes_targets"] = round(statistics.mean(tgt_moves), 1); T["bl.bikes_midday"] = round(statistics.mean(mid_moves), 1)
+
     T["reb.midday_extra_moves"] = round(T["reb.midday_bikes_per_day"] - T["reb.overnight_bikes_per_day"])
 
     # ---- efficiency estimate: recomputed from the stated assumptions (not from efficiency_model.py)

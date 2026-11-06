@@ -1,4 +1,4 @@
-Checking ANL559_ECA_1a_1b_1c_v11.docx (claims: report_claims.json, week 2026-03-23)
+Checking ANL559_ECA_1a_1b_1c_v12.docx (claims: report_claims.json, week 2026-03-23)
 
 A. Write-up numbers vs independent recalculation
   ok           6,500  vs data.trips = 6500   "6,500 trips, 20 stations and 300 comments"
@@ -19,12 +19,6 @@ A. Write-up numbers vs independent recalculation
   ok              12  vs data.complete_weeks = 12   "08:00 was the busiest morning hour in 10 of 12 complete week"
   ok           18:00  vs data.busiest_evening_hour = 18:00   "18:00 the busiest evening hour in 11"
   ok              11  vs data.weeks_busiest_18 = 11   "18:00 the busiest evening hour in 11"
-  ok              no  vs reb.overnight_turned_away = 0   "overnight rebalancing turned away no riders"
-  ok              22  vs reb.overnight_bikes_per_day = 22.0   "raised bikes moved from 22 to 30 a day"
-  ok              30  vs reb.midday_bikes_per_day = 30.0   "raised bikes moved from 22 to 30 a day"
-  ok             224  vs reb.full_turned_away = 224   "would have left 224 riders without a dock"
-  ok           eight  vs reb.backtest_weeks = 8   "turned away no riders in all eight weeks"
-  ok           eight  vs reb.backtest_weeks_zero_turned_away = 8   "turned away no riders in all eight weeks"
   ok              15  vs reb.weekday_bikes_per_night = 15   "The plan moves 15 bikes each weekday night"
   ok            once  vs reb.raffles_close_call_days = 1   "Raffles Place reached empty once"
   ok             218  vs data.negative = 218   "218 comments are negative and 82 positive"
@@ -35,7 +29,7 @@ A. Write-up numbers vs independent recalculation
   ok               6  vs data.gears = 6   "Brake (20) and gear (6) complaints"
   ok            70.9  vs data.jan_trips_per_day = 70.9   "Trips rose from 70.9 to 74.4 a day"
   ok            74.4  vs data.mar_trips_per_day = 74.4   "Trips rose from 70.9 to 74.4 a day"
-  ok             8.1  vs week.vs_prior_4wk_pct = -8.1   "8.1% below the four-week average"
+  ok             8.1  vs week.vs_prior_4wk_pct = -8.1   "8.1% dip below the four-week average"
   ok             468  vs week.range_min = 468   "normal range of 468 to 545"
   ok             545  vs week.range_max = 545   "normal range of 468 to 545"
   ok              13  vs proc.independent_checks = 13   "All 13 independent checks matched"
@@ -95,10 +89,6 @@ A. Write-up numbers vs independent recalculation
   ok              40  vs eff.rate = 40   "about 278 hours a year over 50 working weeks, worth roughly "
   ok               4  vs eff.sens_low_hours = 4   "only 4 hours a week, the saving would still be about 3.1 hou"
   ok             3.1  vs eff.sens_low_saved = 3.1   "only 4 hours a week, the saving would still be about 3.1 hou"
-  ok           eight  vs reb.backtest_weeks = 8   "turned away no riders in all eight weeks tested"
-  ok           eight  vs reb.backtest_weeks_zero_turned_away = 8   "turned away no riders in all eight weeks tested"
-  ok              no  vs reb.overnight_turned_away = 0   "turned away no riders in all eight weeks tested"
-  ok             224  vs reb.full_turned_away = 224   "would have left 224 riders without a dock in the latest week"
   ok              22  vs reb.overnight_bikes_per_day = 22.0   "saves about eight bike moves a day (22 instead of 30)"
   ok              30  vs reb.midday_bikes_per_day = 30.0   "saves about eight bike moves a day (22 instead of 30)"
   ok           eight  vs reb.midday_extra_moves = 8   "saves about eight bike moves a day (22 instead of 30)"
@@ -108,6 +98,19 @@ A. Write-up numbers vs independent recalculation
   ok           0.085  vs impact.App crash on unlock.lift = 0.085   "lift the average rating by about 0.085 stars"
   ok            70.9  vs data.jan_trips_per_day = 70.9   "Rising use (70.9 to 74.4 trips a day"
   ok            74.4  vs data.mar_trips_per_day = 74.4   "Rising use (70.9 to 74.4 trips a day"
+  ok           eight  vs reb.backtest_weeks = 8   "on the eight weeks not used to set the targets"
+  ok             967  vs bl.do_nothing = 967   "Doing nothing turned away 967 riders, opening every station "
+  ok           1,880  vs bl.open_full = 1880   "Doing nothing turned away 967 riders, opening every station "
+  ok             749  vs bl.single_signal = 749   "Doing nothing turned away 967 riders, opening every station "
+  ok               2  vs bl.open_half = 2   "A half-full rule turned away 2 and the station targets none,"
+  ok            22.2  vs bl.bikes_targets = 22.2   "A half-full rule turned away 2 and the station targets none,"
+  ok            30.6  vs bl.bikes_midday = 30.6   "A half-full rule turned away 2 and the station targets none,"
+  ok            none  vs bl.targets_turned_away = 0   "A half-full rule turned away 2 and the station targets none,"
+  ok             967  vs bl.do_nothing = 967   "Over eight unseen weeks, rebalancing every night turned away"
+  ok           eight  vs reb.backtest_weeks = 8   "Over eight unseen weeks, rebalancing every night turned away"
+  ok              no  vs bl.targets_turned_away = 0   "Over eight unseen weeks, rebalancing every night turned away"
+  ok               0  vs bl.targets_turned_away = 0   "edge out a simple half-full rule (0 against 2 riders)"
+  ok               2  vs bl.open_half = 2   "edge out a simple half-full rule (0 against 2 riders)"
 
 B. Every number in 1a/1b is registered
   ok    all numbers belong to a registered claim, a definition or a label
