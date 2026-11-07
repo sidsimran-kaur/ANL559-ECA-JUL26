@@ -1,4 +1,4 @@
-Checking ANL559_ECA_1a_1b_1c_v12.docx (claims: report_claims.json, week 2026-03-23)
+Checking ANL559_ECA_1a_1b_1c_1d_v13.docx (claims: report_claims.json, week 2026-03-23)
 
 A. Write-up numbers vs independent recalculation
   ok           6,500  vs data.trips = 6500   "6,500 trips, 20 stations and 300 comments"
@@ -111,6 +111,15 @@ A. Write-up numbers vs independent recalculation
   ok              no  vs bl.targets_turned_away = 0   "Over eight unseen weeks, rebalancing every night turned away"
   ok               0  vs bl.targets_turned_away = 0   "edge out a simple half-full rule (0 against 2 riders)"
   ok               2  vs bl.open_half = 2   "edge out a simple half-full rule (0 against 2 riders)"
+  ok             214  vs to_week_end.negative = 214   "(214 instead of 218 negative comments)"
+  ok             218  vs data.negative = 218   "(214 instead of 218 negative comments)"
+  ok              99  vs data.unique_start_minute_pct = 99.0   "99% of trips are unique on their start station and start min"
+  ok              46  vs data.recurring_patterns_5plus_days = 46   "46 route-and-time patterns repeat on five or more days"
+  ok             4.6  vs data.feedback_per_trip_pct = 4.6   "Feedback comes from only 4.6% of trips"
+  ok              52  vs data.casual_share_feedback_pct = 52   "(52% of comments against 40% of trips)"
+  ok              40  vs data.casual_share_trips_pct = 40   "(52% of comments against 40% of trips)"
+  ok             468  vs week.range_min = 468   "Weekly trips outside 468–545"
+  ok             545  vs week.range_max = 545   "Weekly trips outside 468–545"
 
 B. Every number in 1a/1b is registered
   ok    all numbers belong to a registered claim, a definition or a label
