@@ -13,6 +13,7 @@ python workflow/verify_report.py out/week_2026-03-23/weekly_report_draft.md
 python workflow/independent_check.py 2026-03-23
 cd workflow && python backtest_weeks.py                       # rebalancing timing on every testable week
 python workflow/render_report.py out/week_2026-03-23/weekly_report_draft.md   # Word report with charts
+python workflow/efficiency_model.py                            # 1c time-saving estimate from stated assumptions
 python workflow/check_report_numbers.py                       # BEFORE SUBMITTING: counter-check every number
 ```
 
@@ -37,6 +38,6 @@ python workflow/check_report_numbers.py                       # BEFORE SUBMITTIN
 | `out/week_<Monday>/` | One folder per reporting week: facts, plan, safety list, review list, charts, draft report, check results |
 | `out/dataset_summary/` | Whole-file (quarter) figures and complaint chart, for quarter statements |
 | `out/backtest_rebalancing_by_week.csv` | Overnight vs midday rebalancing on 8 weeks of unseen data |
-| `report/` | Write-up drafts (`ANL559_ECA_1a_1b_v10.docx` is current) and builder |
-| `ai_use_log/` | AI-use log v8 (`.docx`, `.md`); full AI outputs go in `outputs/` |
+| `report/` | Write-up drafts (`ANL559_ECA_1a_1b_1c_v11.docx` is current) and builder |
+| `ai_use_log/` | AI-use log v9 (`.docx`, `.md`); full AI outputs go in `outputs/` |
 | `docs/` | Earlier explainer (v1, superseded by v2 pipeline) |

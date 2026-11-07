@@ -170,6 +170,12 @@ def compute(week):
             (watch if T[key + ".diff"] < 0 else hidden).append(theme)
     T["data.rating_watch_list"] = sorted(watch); T["data.rating_hidden_list"] = sorted(hidden)
     T["data.rating_watch_count"] = len(watch)
+    T["data.watch_app_or_billing"] = sum(t in ("App crash on unlock", "App payment failure", "Double charge", "Unexpected late fee") for t in watch)
+    T["data.hidden_complaints_total"] = sum(T["impact." + t + ".n"] for t in hidden)
+    for text, theme in THEME_OF.items():
+        mine = [r["rating"] for r in fb if r["comment_text"] == text]
+        rest = [r["rating"] for r in fb if r["comment_text"] != text]
+        T["impact." + theme + ".lift"] = round((statistics.mean(rest) - statistics.mean(mine)) * len(mine) / len(fb), 3)
     by_bike = defaultdict(list)
     for r in trips:
         by_bike[r["bike_id"]].append(r)
@@ -269,6 +275,25 @@ def compute(week):
         bt_ok += replay([r for r in trips if monday(r["st"]) == w], cap, tg)[0] == 0
     T["reb.backtest_weeks_zero_turned_away"] = bt_ok
     T["reb.backtest_weeks"] = len(cw) - 4
+
+    T["reb.midday_extra_moves"] = round(T["reb.midday_bikes_per_day"] - T["reb.overnight_bikes_per_day"])
+
+    # ---- efficiency estimate: recomputed from the stated assumptions (not from efficiency_model.py)
+    A = json.loads((ROOT / "workflow" / "efficiency_assumptions.json").read_text())
+    man, aut = A["manual"], A["automated"]
+    m_tot, a_tot = sum(man.values()), sum(aut.values())
+    T["eff.manual_minutes"] = m_tot; T["eff.manual_hours"] = round(m_tot / 60, 1)
+    T["eff.automated_minutes"] = a_tot
+    T["eff.saved_hours"] = round((m_tot - a_tot) / 60, 1); T["eff.saved_pct"] = round((m_tot - a_tot) / m_tot * 100)
+    T["eff.weeks"] = A["working_weeks_per_year"]; T["eff.rate"] = A["analyst_cost_per_hour_sgd"]
+    T["eff.saved_hours_year"] = round((m_tot - a_tot) / 60 * A["working_weeks_per_year"])
+    T["eff.saved_value_year"] = round((m_tot - a_tot) / 60 * A["working_weeks_per_year"] * A["analyst_cost_per_hour_sgd"], -2)
+    T["eff.sens_low_hours"] = A["sensitivity_manual_hours"][0]
+    T["eff.sens_low_saved"] = round(A["sensitivity_manual_hours"][0] - a_tot / 60, 1)
+    mv, av = list(man.values()), list(aut.values())
+    T["eff.m.prepare"], T["eff.m.analyse"], T["eff.m.charts"], T["eff.m.write"], T["eff.m.rebalance"] = mv[0], mv[1] + mv[2], mv[3], mv[4], mv[5]
+    T["eff.a.prepare"], T["eff.a.write"], T["eff.a.rebalance"], T["eff.a.signoff"] = av[1], av[2], av[3], av[0] + av[4] + av[5]
+    T["zero"] = 0
 
     # ---- process evidence (read from the check outputs)
     wkdir = ROOT / "out" / f"week_{week}"

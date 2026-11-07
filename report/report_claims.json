@@ -7,7 +7,9 @@
     "30-minute slots with at least 1.5 times average demand",
     "per 30 minutes",
     "I first assumed 07:00–09:00 and 17:30–19:30",
-    "Mann–Whitney test, p < 0.01"
+    "Mann–Whitney test, p < 0.01",
+    "minutes a week",
+    "(Table 1)"
   ],
   "claims": [
     {
@@ -268,6 +270,168 @@
       "values": {
         "4.19": "impact.App GPS wrong station.avg",
         "4.5": "impact.No bikes (peak hour).avg"
+      }
+    },
+    {
+      "phrase": "spend an estimated 6.4 hours a week producing the report",
+      "values": {
+        "6.4": "eff.manual_hours"
+      }
+    },
+    {
+      "phrase": "which takes about 51 minutes",
+      "values": {
+        "51": "eff.automated_minutes"
+      }
+    },
+    {
+      "phrase": "Prepare data and check quality | 45 | 10",
+      "values": {
+        "45": "eff.m.prepare",
+        "10": "eff.a.prepare"
+      }
+    },
+    {
+      "phrase": "Analyse stations and comments | 120 | 0",
+      "values": {
+        "120": "eff.m.analyse",
+        "0": "zero"
+      }
+    },
+    {
+      "phrase": "Build the charts | 60 | 0",
+      "values": {
+        "60": "eff.m.charts",
+        "0": "zero"
+      }
+    },
+    {
+      "phrase": "Write and sense-check the report | 90 | 15",
+      "values": {
+        "90": "eff.m.write",
+        "15": "eff.a.write"
+      }
+    },
+    {
+      "phrase": "Plan or approve the rebalancing | 70 | 5",
+      "values": {
+        "70": "eff.m.rebalance",
+        "5": "eff.a.rebalance"
+      }
+    },
+    {
+      "phrase": "Run, sign off and upkeep | 0 | 21",
+      "values": {
+        "0": "zero",
+        "21": "eff.a.signoff"
+      }
+    },
+    {
+      "phrase": "Total | 385 | 51",
+      "values": {
+        "385": "eff.manual_minutes",
+        "51": "eff.automated_minutes"
+      }
+    },
+    {
+      "phrase": "traces to facts.json (88 of 88 this week)",
+      "values": {
+        "88": "proc.numbers_traced"
+      }
+    },
+    {
+      "phrase": "recomputed independently (13 checks)",
+      "values": {
+        "13": "proc.independent_checks"
+      }
+    },
+    {
+      "phrase": "such as 14 pairs of overlapping bike trips",
+      "values": {
+        "14": "data.overlap_pairs"
+      }
+    },
+    {
+      "phrase": "the 43 complaints that riders still rated highly (27 GPS errors and 16 peak-hour shortages)",
+      "values": {
+        "43": "data.hidden_complaints_total",
+        "27": "data.gps",
+        "16": "impact.No bikes (peak hour).n"
+      }
+    },
+    {
+      "phrase": "saves about 5.6 hours a week, or 87% of the time",
+      "values": {
+        "5.6": "eff.saved_hours",
+        "87": "eff.saved_pct"
+      }
+    },
+    {
+      "phrase": "about 278 hours a year over 50 working weeks, worth roughly S$11,100 at an assumed S$40 an hour",
+      "values": {
+        "278": "eff.saved_hours_year",
+        "50": "eff.weeks",
+        "11,100": "eff.saved_value_year",
+        "40": "eff.rate"
+      }
+    },
+    {
+      "phrase": "only 4 hours a week, the saving would still be about 3.1 hours",
+      "values": {
+        "4": "eff.sens_low_hours",
+        "3.1": "eff.sens_low_saved"
+      }
+    },
+    {
+      "phrase": "turned away no riders in all eight weeks tested",
+      "words": {
+        "eight": [
+          "reb.backtest_weeks",
+          "reb.backtest_weeks_zero_turned_away"
+        ],
+        "no": "reb.overnight_turned_away"
+      }
+    },
+    {
+      "phrase": "would have left 224 riders without a dock in the latest week",
+      "values": {
+        "224": "reb.full_turned_away"
+      }
+    },
+    {
+      "phrase": "saves about eight bike moves a day (22 instead of 30)",
+      "values": {
+        "22": "reb.overnight_bikes_per_day",
+        "30": "reb.midday_bikes_per_day"
+      },
+      "words": {
+        "eight": "reb.midday_extra_moves"
+      }
+    },
+    {
+      "phrase": "The 26 brake and gear complaints this quarter",
+      "values": {
+        "26": "data.safety"
+      }
+    },
+    {
+      "phrase": "Three of the five complaints that most lower ratings",
+      "words": {
+        "Three": "data.watch_app_or_billing",
+        "five": "data.rating_watch_count"
+      }
+    },
+    {
+      "phrase": "lift the average rating by about 0.085 stars",
+      "values": {
+        "0.085": "impact.App crash on unlock.lift"
+      }
+    },
+    {
+      "phrase": "Rising use (70.9 to 74.4 trips a day",
+      "values": {
+        "70.9": "data.jan_trips_per_day",
+        "74.4": "data.mar_trips_per_day"
       }
     }
   ]

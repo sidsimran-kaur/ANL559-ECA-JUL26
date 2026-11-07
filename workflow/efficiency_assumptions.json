@@ -1,0 +1,22 @@
+{
+  "_note": "Minutes per week. Manual times are the student's estimates for a week of about 490 trips and 21 comments (the case brief gives no baseline, only 'hours every week'). Automated times are the human work left after the pipeline runs (about 4 seconds, measured). Change a number here and re-run efficiency_model.py; the write-up check recomputes the totals.",
+  "manual": {
+    "Export, check and clean the week's data": 45,
+    "Pivot departures and arrivals, spot shortages": 90,
+    "Read and tally the comments": 30,
+    "Build the charts": 60,
+    "Write the commentary": 90,
+    "Plan nightly rebalancing (10 minutes a night)": 70
+  },
+  "automated": {
+    "Run the pipeline and open the outputs": 1,
+    "Review data-quality log and review triggers": 10,
+    "Read the draft and sense-check findings": 15,
+    "Approve the rebalancing plan": 5,
+    "Sign off the report": 5,
+    "Upkeep: new comment types, peak or rule changes (averaged)": 15
+  },
+  "working_weeks_per_year": 50,
+  "analyst_cost_per_hour_sgd": 40,
+  "sensitivity_manual_hours": [4, 8]
+}
