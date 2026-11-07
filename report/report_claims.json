@@ -9,7 +9,10 @@
     "I first assumed 07:00–09:00 and 17:30–19:30",
     "Mann–Whitney test, p < 0.01",
     "minutes a week",
-    "(Table 1)"
+    "(Table 1)",
+    "(15 against 14 bikes)",
+    "coarsen timestamps to 30 minutes",
+    "on 2+ days"
   ],
   "claims": [
     {
@@ -430,6 +433,45 @@
       "values": {
         "0": "bl.targets_turned_away",
         "2": "bl.open_half"
+      }
+    },
+    {
+      "phrase": "(214 instead of 218 negative comments)",
+      "values": {
+        "214": "to_week_end.negative",
+        "218": "data.negative"
+      }
+    },
+    {
+      "phrase": "99% of trips are unique on their start station and start minute",
+      "values": {
+        "99": "data.unique_start_minute_pct"
+      }
+    },
+    {
+      "phrase": "46 route-and-time patterns repeat on five or more days",
+      "values": {
+        "46": "data.recurring_patterns_5plus_days"
+      }
+    },
+    {
+      "phrase": "Feedback comes from only 4.6% of trips",
+      "values": {
+        "4.6": "data.feedback_per_trip_pct"
+      }
+    },
+    {
+      "phrase": "(52% of comments against 40% of trips)",
+      "values": {
+        "52": "data.casual_share_feedback_pct",
+        "40": "data.casual_share_trips_pct"
+      }
+    },
+    {
+      "phrase": "Weekly trips outside 468–545",
+      "values": {
+        "468": "week.range_min",
+        "545": "week.range_max"
       }
     }
   ]

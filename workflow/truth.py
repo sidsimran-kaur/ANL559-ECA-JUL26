@@ -155,6 +155,16 @@ def compute(week):
     T["data.morning_shortage"] = c[MORNING]; T["data.gps"] = c[GPS]
     T["data.brakes"] = c[BRAKES]; T["data.gears"] = c[GEARS]; T["data.safety"] = c[BRAKES] + c[GEARS]
     T["data.rating_text_disagree"] = sum(disagree(r) for r in fb)
+    # privacy and bias evidence for 1d
+    key_min = Counter((r["start_station"], r["start_time"][:16]) for r in trips)
+    T["data.unique_start_minute_pct"] = round(sum(1 for r in trips if key_min[(r["start_station"], r["start_time"][:16])] == 1) / len(trips) * 100, 1)
+    pat_days = defaultdict(set)
+    for r in trips:
+        pat_days[(r["start_station"], r["end_station"], r["st"].hour * 60 + (r["st"].minute // 30) * 30, r["user_type"])].add(r["st"].date())
+    T["data.recurring_patterns_5plus_days"] = sum(len(v) >= 5 for v in pat_days.values())
+    T["data.feedback_per_trip_pct"] = round(len(fb) / len(trips) * 100, 1)
+    T["data.casual_share_feedback_pct"] = round(sum(r["user_type"] == "Casual" for r in fb) / len(fb) * 100)
+    T["data.casual_share_trips_pct"] = round(sum(r["user_type"] == "Casual" for r in trips) / len(trips) * 100)
     T["data.avg_rating"] = round(statistics.mean(r["rating"] for r in fb), 2)
     watch, hidden = [], []
     for text, theme in THEME_OF.items():
@@ -228,6 +238,7 @@ def compute(week):
     T["week.negative"] = sum(r["comment_text"] in NEGATIVE for r in wfb)
     T["week.rating_text_disagree"] = sum(disagree(r) for r in wfb)
     T["week.safety"] = sum(r["comment_text"] in (BRAKES, GEARS) for r in wfb)
+    T["to_week_end.negative"] = sum(r["comment_text"] in NEGATIVE for r in fb if r["d"] < we)
     T["to_week_end.safety"] = sum(r["comment_text"] in (BRAKES, GEARS) for r in fb if r["d"] < we)
     wdays = {r["st"].date() for r in wk if r["st"].weekday() < 5}
     def morning(st):
