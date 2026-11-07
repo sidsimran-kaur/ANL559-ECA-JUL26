@@ -1,0 +1,7 @@
+rule,riders_turned_away,bikes_moved_per_day
+0 do nothing,967,0.0
+1 open full,1880,16.8
+2 open half,2,22.2
+3 single signal,749,17.4
+4 targets (our rule),0,22.2
+5 targets + midday,0,30.6

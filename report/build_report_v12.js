@@ -84,23 +84,25 @@ C.push(h2("Automated output"));
 C.push(p("**Peak hours.** I first assumed 07:00–09:00 and 17:30–19:30, but the pipeline defines peaks from the data as weekday 30-minute slots with at least 1.5 times average demand. This gives 08:00–10:00, 12:00–13:00 and 17:00–20:00, carrying 71.8% of weekday trips. They are consistent: 08:00 was the busiest morning hour in 10 of 12 complete weeks and 18:00 the busiest evening hour in 11 (Figure 1; row 16)."));
 C.push(img("out/week_2026-03-23/chart1_peak_hours.png", 540, 254));
 C.push(caption("Figure 1. Weekday and weekend demand per 30 minutes, with the approved peaks shaded"));
-C.push(p("**Rebalancing.** An earlier version wrongly let shortfalls carry over between days; I corrected this because the team rebalances nightly, so each day starts afresh (row 15). Replaying the latest week, overnight rebalancing turned away no riders, a midday run raised bikes moved from 22 to 30 a day for no benefit, and opening every station full would have left 224 riders without a dock. Overnight rebalancing also turned away no riders in all eight weeks tested on unseen data, so it is recommended (row 18)."));
-C.push(p("The plan moves 15 bikes each weekday night, mainly from Serangoon, Bishan, Bugis, Paya Lebar and Somerset to business-district stations (Figure 2). Raffles Place reached empty once without turning anyone away, so it is on a watch list (Figure 3)."));
+C.push(p("**Rebalancing.** An earlier version wrongly let shortfalls carry over between days; I corrected this because the team rebalances nightly, so each day starts afresh (row 15). I then tested the rule against simpler baselines on the eight weeks not used to set the targets (Figure 2; row 27). Doing nothing turned away 967 riders, opening every station full 1,880, and stocking only for the average daily loss 749, because it ignores free docks. A half-full rule turned away 2 and the station targets none, both moving 22.2 bikes a day, while a midday run raised this to 30.6 for no benefit. Nightly rebalancing is what matters, and the targets add a small margin at tight stations such as Raffles Place, so overnight rebalancing to targets is recommended (row 18)."));
+C.push(img("out/chart_baseline_ladder.png", 520, 232));
+C.push(caption("Figure 2. Riders turned away over eight unseen weeks under each rebalancing rule"));
+C.push(p("The plan moves 15 bikes each weekday night, mainly from Serangoon, Bishan, Bugis, Paya Lebar and Somerset to business-district stations (Figure 3). Raffles Place reached empty once without turning anyone away, so it is on a watch list (Figure 4)."));
 C.push(img("out/week_2026-03-23/chart3_rebalancing_plan.png", 500, 353));
-C.push(caption("Figure 2. Nightly weekday rebalancing plan with opening targets"));
+C.push(caption("Figure 3. Nightly weekday rebalancing plan with opening targets"));
 C.push(img("out/week_2026-03-23/chart4_stock_through_day.png", 520, 294));
-C.push(caption("Figure 3. Bikes on hand through an average weekday at the four stations receiving the most bikes"));
-C.push(p("**Feedback and safety.** Across the quarter, 218 comments are negative and 82 positive by their text, and GPS errors and morning shortages lead with 27 each. Brake (20) and gear (6) complaints are flagged for same-day maintenance (Figure 4; row 17)."));
+C.push(caption("Figure 4. Bikes on hand through an average weekday at the four stations receiving the most bikes"));
+C.push(p("**Feedback and safety.** Across the quarter, 218 comments are negative and 82 positive by their text, and GPS errors and morning shortages lead with 27 each. Brake (20) and gear (6) complaints are flagged for same-day maintenance (Figure 5; row 17)."));
 C.push(img("out/dataset_summary/chart_complaints_full_data.png", 480, 300));
-C.push(caption("Figure 4. Complaint themes, 1 January to 31 March 2026, with safety themes in red"));
-C.push(p("**Which complaints hurt the rating most.** Pairing each comment's theme with its star rating shows which complaints lower ratings by more than chance would explain (Mann–Whitney test, p < 0.01). Five do: app crashes on unlock average 2.32 stars, 1.02 below other comments, followed by double charges, loose brakes, app payment failures and morning shortages (Figure 5; row 22). These form CityCycle's rating watch list. Two complaints barely show in the stars, because GPS errors average 4.19 and peak-hour shortages 4.5, so they must be tracked from the text instead."));
+C.push(caption("Figure 5. Complaint themes, 1 January to 31 March 2026, with safety themes in red"));
+C.push(p("**Which complaints hurt the rating most.** Pairing each comment's theme with its star rating shows which complaints lower ratings by more than chance would explain (Mann–Whitney test, p < 0.01). Five do: app crashes on unlock average 2.32 stars, 1.02 below other comments, followed by double charges, loose brakes, app payment failures and morning shortages (Figure 6; row 22). These form CityCycle's rating watch list. Two complaints barely show in the stars, because GPS errors average 4.19 and peak-hour shortages 4.5, so they must be tracked from the text instead."));
 C.push(img("out/dataset_summary/chart_rating_impact.png", 520, 318));
-C.push(caption("Figure 5. Star rating of each complaint type compared with all other comments"));
-C.push(p("**Trend.** Trips rose from 70.9 to 74.4 a day between January and March, led by casual riders (Figure 6). The latest week was 8.1% below the four-week average but within the normal range of 468 to 545, so it is a signal to watch."));
+C.push(caption("Figure 6. Star rating of each complaint type compared with all other comments"));
+C.push(p("**Trend.** Trips rose from 70.9 to 74.4 a day between January and March, led by casual riders (Figure 7), and the latest week's 8.1% dip below the four-week average stays within the normal range of 468 to 545."));
 C.push(img("out/week_2026-03-23/chart6_weekly_trend.png", 520, 247));
-C.push(caption("Figure 6. Weekly trips by rider type, complete weeks from 5 January to 29 March 2026"));
+C.push(caption("Figure 7. Weekly trips by rider type, complete weeks from 5 January to 29 March 2026"));
 C.push(h2("Prompts and verification"));
-C.push(p("In the key prompts (rows 15–22) I asked Claude to correct the design for daily rebalancing, find and test the peak hours, flag brakes and gears, show how and when to rebalance using the latest week, counter-check every number, and find which complaints lower ratings most."));
+C.push(p("In the key prompts (rows 15–27) I asked Claude to correct the design, test the peak hours and the rebalancing rule, flag safety issues, counter-check every number, and find which complaints lower ratings most."));
 C.push(p("After I found a quarter figure quoted from a shorter window (row 21), a final script now recomputes every number in this write-up from the raw data, and checks each station figure in the weekly report, before anything is submitted. Figures were also checked by Excel spot-checks. All 13 independent checks matched for the worked-example week, including 486 trips, morning losses of 2.8 at Tanjong Pagar and 2.6 at Raffles Place, peaks at 08:00 and 18:00, 26 safety comments, and 15 bikes delivered and collected."));
 C.push(h2("Worked example: the week of 23–29 March 2026"));
 C.push(p("The pipeline loaded 486 trips and 21 comments; the contract raised no failures and four warnings. Detected peaks matched the approved windows, and Tanjong Pagar, Raffles Place and Clarke Quay lost the most bikes each morning. It recommended overnight rebalancing of 15 bikes per weekday night. Of 21 comments, 14 were negative, 10 had ratings that contradicted their text and were logged, and none raised a safety issue. The review trigger flagged that app payment failures had joined the rating watch list."));
@@ -110,7 +112,7 @@ C.push(p("Claude drafted the report from facts.json alone (Appendix A; row 14). 
 C.push(new Paragraph({ children: [new PageBreak()] }));
 section = "1c";
 C.push(h1("1c. Assess the business value"));
-C.push(p("**Time and effort.** Today the analyst and the operations lead spend an estimated 6.4 hours a week producing the report and planning the nightly rebalancing (Table 1). The pipeline turns the raw files into a checked report with charts in about four seconds. The human work that remains is reviewing the checks, reading the draft, approving the rebalancing plan, signing off and occasional upkeep, which takes about 51 minutes (Figure 7). Effort therefore shifts from assembling numbers to judging them."));
+C.push(p("**Time and effort.** Today the analyst and the operations lead spend an estimated 6.4 hours a week producing the report and planning the nightly rebalancing (Table 1). The pipeline turns the raw files into a checked report with charts in about four seconds. The human work that remains is reviewing the checks, reading the draft, approving the rebalancing plan, signing off and occasional upkeep, which takes about 51 minutes (Figure 8). Effort therefore shifts from assembling numbers to judging them."));
 C.push(caption("Table 1. Staff minutes per week, manual and automated (assumptions)"));
 C.push(table([4300, 2300, 2426], [
   ["Step", "Manual", "Automated"],
@@ -123,12 +125,12 @@ C.push(table([4300, 2300, 2426], [
   ["Total", "385", "51"],
 ]));
 C.push(img("out/efficiency/chart_time_per_week.png", 520, 196));
-C.push(caption("Figure 7. Staff time per week, manual and automated"));
+C.push(caption("Figure 8. Staff time per week, manual and automated"));
 C.push(p("**Consistency.** Manually, definitions such as the peak hours change with whoever writes the report. In the automation they are fixed in the work order and changed only with sign-off, so every week is measured the same way. Every figure in the weekly report traces to facts.json (88 of 88 this week), key figures are recomputed independently (13 checks), and the data-quality checks run every week, flagging issues a pivot table hides, such as 14 pairs of overlapping bike trips."));
-C.push(p("**Quality of insight.** The manual report describes where bikes ran out after the event. The automation says how many bikes each station should open with and when to move them, tested on weeks the rule had not seen. Because it reads the comment text, the 43 complaints that riders still rated highly (27 GPS errors and 16 peak-hour shortages) are not missed, and it shows which complaints lower ratings most."));
+C.push(p("**Quality of insight.** The manual report describes where bikes ran out after the event. The automation says how many bikes each station should open with and when to move them, tested against simpler rules on weeks it had not seen. Because it reads the comment text, the 43 complaints that riders still rated highly (27 GPS errors and 16 peak-hour shortages) are not missed, and it shows which complaints lower ratings most."));
 C.push(p("**Efficiency gain.** On these assumptions the automation saves about 5.6 hours a week, or 87% of the time. That is about 278 hours a year over 50 working weeks, worth roughly S$11,100 at an assumed S$40 an hour. Even if the manual work took only 4 hours a week, the saving would still be about 3.1 hours. Turnaround improves too: the report is ready minutes after the week closes rather than late on Monday, and safety complaints reach maintenance the same day instead of waiting up to a week. The manual times are my own estimates, because the case gives no baseline beyond 'hours every week', and the figures exclude the AI tool subscription, which is small next to the hours saved."));
 C.push(h2("Decisions the automation improves"));
-C.push(num("**Nightly rebalancing (operations lead).** Station targets and a move list replace judgement from experience. Overnight rebalancing turned away no riders in all eight weeks tested, whereas opening every station full would have left 224 riders without a dock in the latest week, and avoiding a midday run saves about eight bike moves a day (22 instead of 30).", "n3"));
+C.push(num("**Nightly rebalancing (operations lead).** A daily move list replaces judgement from experience. Over eight unseen weeks, rebalancing every night turned away no riders, against 967 with no rebalancing at all. The station targets edge out a simple half-full rule (0 against 2 riders) for the same truck effort, and avoiding a midday run saves about eight bike moves a day (22 instead of 30).", "n3"));
 C.push(num("**Maintenance (maintenance lead).** The 26 brake and gear complaints this quarter are escalated on the day they arrive rather than in the next weekly report.", "n3"));
 C.push(num("**App and billing priorities (management).** Three of the five complaints that most lower ratings are app or billing problems, and fixing app crashes alone would lift the average rating by about 0.085 stars.", "n3"));
 C.push(num("**Capacity planning (management).** Rising use (70.9 to 74.4 trips a day, led by casual riders) and the Raffles Place watch list show where extra docks would help first.", "n3"));
@@ -210,6 +212,9 @@ const newRows = [
   ["26", "6 Nov 2026", "BUILD\nBusiness value", "Let's answer 1c: compare the automated approach with the manual one on time, effort, consistency and quality of insight; estimate the efficiency gain with clear assumptions; and identify which business decisions the automation improves.",
     "1c draft. Manual time per task written as explicit assumptions (efficiency_assumptions.json: 385 minutes); automated human time 51 minutes; pipeline run measured at about 4 seconds. efficiency_model.py computes 5.6 hours saved a week (87%), 278 hours a year, about S$11,100 at an assumed S$40 an hour; 3.1 hours even if manual work is only 4 hours. Figure 7. Four decisions: rebalancing, maintenance, app and billing priorities, capacity planning.",
     "Checked the manual minutes against my own experience of the weekly task and adjusted them; truth.py recomputes every total from the assumptions file.", "Accepted; the manual times are labelled as my estimates because the case gives no baseline.", "1c; workflow/efficiency_assumptions.json; out/efficiency/"],
+  ["27", "6 Nov 2026", "BREAK\nBaseline ladder", "Do I need to do a baseline model (most frequent class, stratified random, single strong feature) where nothing is done, vs others to show that the rebalancing model is adding value?",
+    "Those classifier baselines do not apply (the rule is not a classifier), but the principle does. Ladder on 8 unseen weeks, riders turned away: do nothing 967, open full 1,880, half full 2, single signal (average loss only) 749, station targets 0, targets + midday 0; bikes moved a day 22.2 for both half full and targets, 30.6 with a midday run. Conclusion: nightly rebalancing is what matters; targets add only a small margin over a half-full rule. Wording in 1b and 1c changed so the targets are not over-credited.",
+    "truth.py recomputes all four baselines independently (matched); I checked the do-nothing rule carries stock over with no resets.", "Modified my claim: targets presented as a small margin over a simple rule, not the source of the benefit.", "Figure 2; out/baseline_ladder.csv; backtest_weeks.py"],
 ];
 const LOGW = [400, 800, 1000, 3300, 3200, 2200, 1800, 1700];
 const logTable = (size) => table(LOGW, [header, ...rows, ...newRows], size, false);
@@ -240,9 +245,9 @@ const landscape = { page: { size: { orientation: PageOrientation.LANDSCAPE }, ma
     { properties: portrait, footers: footer, children: C },
     { properties: landscape, footers: footer, children: L },
   ] });
-  fs.writeFileSync(path.join(ROOT, "report", "ANL559_ECA_1a_1b_1c_v11.docx"), await Packer.toBuffer(report));
+  fs.writeFileSync(path.join(ROOT, "report", "ANL559_ECA_1a_1b_1c_v12.docx"), await Packer.toBuffer(report));
   const logDoc = new Document({ styles, numbering, sections: [{ properties: landscape, children: [h1("AI-use log · ANL559 ECA Question 1"), p(LOG_INTRO), logTable(15)] }] });
-  fs.writeFileSync(path.join(ROOT, "ai_use_log", "ANL559_ECA_AI_use_log_v9.docx"), await Packer.toBuffer(logDoc));
+  fs.writeFileSync(path.join(ROOT, "ai_use_log", "ANL559_ECA_AI_use_log_v10.docx"), await Packer.toBuffer(logDoc));
   const esc = c => String(c).replace(/\n/g, " / ").replace(/\|/g, "/");
   const mdLog = ["# AI-use log · ANL559 ECA Question 1", "", LOG_INTRO, "", "| " + header.join(" | ") + " |", "|" + header.map(() => "---").join("|") + "|",
     ...[...rows, ...newRows].map(r => r.length === 1 ? `| **${esc(r[0])}** |${" |".repeat(header.length - 1)}` : "| " + r.map(esc).join(" | ") + " |"), ""].join("\n");
